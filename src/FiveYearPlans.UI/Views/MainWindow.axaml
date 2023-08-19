@@ -1,0 +1,127 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:NodeEditorDemo.ViewModels"
+        xmlns:views="clr-namespace:NodeEditorDemo.Views"
+        mc:Ignorable="d" d:DesignWidth="1230" d:DesignHeight="740"
+        x:Class="NodeEditorDemo.Views.MainWindow"
+        x:Name="MainWindowView"
+        WindowState="Normal" WindowStartupLocation="CenterScreen"
+        Width="1230" Height="740"
+        Icon="/Assets/Icon.ico"
+        Title="NodeEditor"
+        Background="{x:Null}"
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        x:CompileBindings="True" x:DataType="vm:MainViewViewModel">
+
+  <Design.DataContext>
+    <vm:MainViewViewModel />
+  </Design.DataContext>
+
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <!-- File -->
+      <NativeMenuItem Header="File">
+        <NativeMenu>
+          <NativeMenuItem Header="New" 
+                          Command="{Binding NewCommand}" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Open..."
+                          Command="{Binding OpenCommand}" 
+                          Gesture="{OnPlatform macOS=CMD+O, iOS=CMD+O, Default=Ctrl+O}"  />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Save..." 
+                          Command="{Binding SaveCommand}" 
+                          Gesture="{OnPlatform macOS=CMD+S, iOS=CMD+S, Default=Ctrl+S}" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Export..." 
+                          Command="{Binding ExportCommand}" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Quit" 
+                          Command="{Binding ExitCommand}"
+                          Gesture="{OnPlatform macOS=CMD+Q, iOS=CMD+Q, Default=Ctrl+Q}"/>
+        </NativeMenu>
+      </NativeMenuItem>
+      <!-- Edit -->
+      <NativeMenuItem Header="Edit">
+        <NativeMenu>
+          <NativeMenuItem Header="Cut" 
+                          Command="{Binding Editor.Drawing.CutNodesCommand, FallbackValue={x:Null}}" 
+                          Gesture="{OnPlatform macOS=CMD+X, iOS=CMD+X, Default=Ctrl+X}" />
+          <NativeMenuItem Header="Copy" 
+                          Command="{Binding Editor.Drawing.CopyNodesCommand, FallbackValue={x:Null}}" 
+                          Gesture="{OnPlatform macOS=CMD+C, iOS=CMD+C, Default=Ctrl+C}" />
+          <NativeMenuItem Header="Paste" 
+                          Command="{Binding Editor.Drawing.PasteNodesCommand, FallbackValue={x:Null}}"
+                          Gesture="{OnPlatform macOS=CMD+V, iOS=CMD+V, Default=Ctrl+V}" />
+          <NativeMenuItem Header="Duplicate" 
+                          Command="{Binding Editor.Drawing.DuplicateNodesCommand, FallbackValue={x:Null}}" 
+                          Gesture="{OnPlatform macOS=CMD+D, iOS=CMD+D, Default=Ctrl+D}" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Select All" 
+                          Command="{Binding Editor.Drawing.SelectAllNodesCommand, FallbackValue={x:Null}}" 
+                          Gesture="{OnPlatform macOS=CMD+A, iOS=CMD+A, Default=Ctrl+A}" />
+          <NativeMenuItem Header="Deselect All" 
+                          Command="{Binding Editor.Drawing.DeselectAllNodesCommand, FallbackValue={x:Null}}" 
+                          Gesture="Escape" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Delete" 
+                          Command="{Binding Editor.Drawing.DeleteNodesCommand, FallbackValue={x:Null}}" 
+                          Gesture="Delete" />
+        </NativeMenu>
+      </NativeMenuItem>
+      <!-- Zoom -->
+      <NativeMenuItem Header="Zoom">
+        <NativeMenu>
+          <NativeMenuItem Header="50%" 
+                          Command="{Binding #MainView.ZoomControl.ZoomToCommand, FallbackValue={x:Null}}"
+                          CommandParameter="0.5" />
+          <NativeMenuItem Header="100%" 
+                          Command="{Binding #MainView.ZoomControl.ResetZoomCommand, FallbackValue={x:Null}}"
+                          Gesture="{OnPlatform macOS=CMD+D0, iOS=CMD+D0, Default=Ctrl+D0}" />
+          <NativeMenuItem Header="200%" 
+                          Command="{Binding #MainView.ZoomControl.ZoomToCommand, FallbackValue={x:Null}}"
+                          CommandParameter="2" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Zoom In" 
+                          Command="{Binding #MainView.ZoomControl.ZoomInCommand, FallbackValue={x:Null}}"
+                          Gesture="Add"/>
+          <NativeMenuItem Header="Zoom Out" 
+                          Command="{Binding #MainView.ZoomControl.ZoomOutCommand, FallbackValue={x:Null}}"
+                          Gesture="Subtract" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Fit Canvas" 
+                          Command="{Binding #MainView.ZoomControl.FitCanvasCommand, FallbackValue={x:Null}}"
+                          Gesture="{OnPlatform macOS=CMD+D1, iOS=CMD+D1, Default=Ctrl+D1}" />
+          <NativeMenuItem Header="Fit to Fill" 
+                          Command="{Binding #MainView.ZoomControl.FitToFillCommand, FallbackValue={x:Null}}"
+                          Gesture="{OnPlatform macOS=CMD+D2, iOS=CMD+D2, Default=Ctrl+D2}" />
+          <NativeMenuItem Header="Fill Canvas" 
+                          Command="{Binding #MainView.ZoomControl.FillCanvasCommand, FallbackValue={x:Null}}"
+                          Gesture="{OnPlatform macOS=CMD+D3, iOS=CMD+D3, Default=Ctrl+D3}" />
+        </NativeMenu>
+      </NativeMenuItem>
+    </NativeMenu>
+  </NativeMenu.Menu>
+
+  <Panel>
+    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+      <ExperimentalAcrylicBorder.Material>
+        <ExperimentalAcrylicMaterial BackgroundSource="Digger"
+                                     TintColor="Black"
+                                     TintOpacity="1"
+                                     FallbackColor="Black"
+                                     MaterialOpacity="1" />
+      </ExperimentalAcrylicBorder.Material>
+    </ExperimentalAcrylicBorder>
+    <Panel Margin="{Binding #MainWindowView.OffScreenMargin}">
+      <Panel Margin="{Binding #MainWindowView.WindowDecorationMargin}">
+        <views:MainView Name="MainView" />
+      </Panel>
+    </Panel>
+  </Panel>
+
+</Window>

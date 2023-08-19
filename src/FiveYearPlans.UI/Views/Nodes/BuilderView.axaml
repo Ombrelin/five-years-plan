@@ -1,0 +1,47 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:FiveYearPlans.ViewModels;assembly=FiveYearPlans.ViewModels"
+             xmlns:viewModels1="clr-namespace:FiveYearPlans.ViewModels.Buildings.ViewModels;assembly=FiveYearPlans.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="60" d:DesignHeight="60"
+             x:Class="NodeEditorDemo.Views.Nodes.BuilderView"
+             x:CompileBindings="True" x:DataType="viewModels1:BuilderViewModel"
+             ClipToBounds="False">
+    <Design.DataContext>
+        <viewModels1:BuilderViewModel />
+    </Design.DataContext>
+    <Panel>
+        <!--<Panel.ContextFlyout>
+      <Flyout>
+        <DockPanel Width="200">
+          <Label Content="Label:" DockPanel.Dock="Top" />
+          <TextBox Text="{Binding Label}" DockPanel.Dock="Top" />
+        </DockPanel>
+      </Flyout>
+    </Panel.ContextFlyout>
+    -->
+        <Rectangle Classes="node" />
+        <StackPanel>
+            <Label>BUILDER</Label>
+            <StackPanel Orientation="Horizontal">
+                <Label>Input :</Label>
+                <StackPanel Orientation="Horizontal">
+                    <Label Classes="node"
+                           Content="{CompiledBinding InputResourceFlow.Quantity}" />
+                    <Label Classes="node"
+                           Content="{CompiledBinding InputResourceFlow.Resource.Name}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel>
+                <Label>Output :</Label>
+                <StackPanel Orientation="Horizontal">
+                    <Label Classes="node"
+                           Content="{CompiledBinding OutPutResourceFlow.Quantity}" />
+                    <Label Classes="node"
+                           Content="{CompiledBinding OutPutResourceFlow.Resource.Name}" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Panel>
+</UserControl>

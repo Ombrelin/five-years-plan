@@ -1,0 +1,29 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Rectangle.node">
+    <Setter Property="Fill" Value="{DynamicResource NodeBackgroundBrush}" />
+    <Setter Property="Stroke" Value="{DynamicResource NodeForegroundBrush}" />
+    <Setter Property="StrokeThickness" Value="2" />
+  </Style>
+
+  <Style Selector="Ellipse.node">
+    <Setter Property="Fill" Value="{DynamicResource NodeBackgroundBrush}" />
+    <Setter Property="Stroke" Value="{DynamicResource NodeForegroundBrush}" />
+    <Setter Property="StrokeThickness" Value="2" />
+  </Style>
+
+  <Style Selector="Label.node">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="(TextElement.FontFamily)" Value="avares://Avalonia.Fonts.Inter/Assets#Inter" />
+  </Style>
+
+  <Style Selector="CheckBox.node">
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Margin" Value="6,0,0,0" />
+    <Setter Property="(TextElement.FontFamily)" Value="avares://Avalonia.Fonts.Inter/Assets#Inter" />
+  </Style>
+
+</Styles>
