@@ -1,3 +1,5 @@
+using FiveYearPlans.ViewModels.Buildings.ViewModels;
+
 namespace FiveYearPlans.ViewModels;
 
 public class BuildingConnector
@@ -20,6 +22,21 @@ public class BuildingConnector
         inputBuilding.InputResourceFlows[inputIndex] =
             outputBuilding.OutPutResourceFlows[outputIndex];
 
+        if (outputBuilding is DynamicFlowBuilding otherDynamicFlowsOutputBuilding)
+        {
+            otherDynamicFlowsOutputBuilding.RecomputeOutput(buildingContextProvider);
+        }
+
+        if (inputBuilding is DynamicFlowBuilding dynamicFlowsInputBuilding)
+        {
+            dynamicFlowsInputBuilding.RecomputeOutput(buildingContextProvider);
+        }
+    }
+
+    public void DisconnectBuilding(uint outputIndex, uint inputIndex, InputBuilding inputBuilding, OutputBuilding outputBuilding)
+    {
+        inputBuilding.InputResourceFlows[inputIndex] = new ResourceFlow(new Resource("Nothing"), 0);
+        
         if (outputBuilding is DynamicFlowBuilding otherDynamicFlowsOutputBuilding)
         {
             otherDynamicFlowsOutputBuilding.RecomputeOutput(buildingContextProvider);

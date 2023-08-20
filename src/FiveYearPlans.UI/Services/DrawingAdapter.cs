@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings;
@@ -25,8 +26,8 @@ internal class DrawingAdapter : IBuildingContextProvider
         {
             X = 0,
             Y = 0,
-            Width = 900,
-            Height = 600,
+            Width = 1280,
+            Height = 720,
             Nodes = new ObservableCollection<INode>(),
             Connectors = connectors,
             EnableMultiplePinConnections = false,
@@ -36,46 +37,68 @@ internal class DrawingAdapter : IBuildingContextProvider
             EnableGrid = true,
             GridCellWidth = 15.0,
             GridCellHeight = 15.0,
-
-
-
-
         };
 
         connectors.CollectionChanged += (e, a) =>
         {
+            if (a.OldItems?.Count > 0 && a.OldItems[0] is ConnectorViewModel deletedConnector)
+            {
+                Disconnect(deletedConnector);
+                return;
+            }
+
             if (a.NewItems is null)
             {
                 return;
             }
-
+            
             if (a.NewItems[0] is ConnectorViewModel newConnector)
             {
                 newConnector.PropertyChanged += (t, v) =>
                 {
+
                     if (v.PropertyName is not "End")
                     {
                         return;
                     }
 
-                    if (newConnector.Start?.Parent?.Content is OutputBuilding outputBuilding &&
-                        newConnector.End?.Parent?.Content is InputBuilding inputBuilding)
-                    {
-                        new BuildingConnector(this).ConnectBuildings(
-                            ComputeOutputIndex(newConnector),
-                            ComputeInputIndex(newConnector),
-                            inputBuilding,
-                            outputBuilding
-                        );
-                    }
+                    Connect(newConnector);
                 };
             }
         };
 
         return drawing;
     }
-    
-    
+
+    private void Disconnect(ConnectorViewModel newConnector)
+    {
+        if (newConnector.Start?.Parent?.Content is OutputBuilding outputBuilding &&
+            newConnector.End?.Parent?.Content is InputBuilding inputBuilding)
+        {
+            new BuildingConnector(this).DisconnectBuilding(
+                ComputeOutputIndex(newConnector),
+                ComputeInputIndex(newConnector),
+                inputBuilding,
+                outputBuilding
+            );
+        }
+    }
+
+    private static bool IsDisconnect(PropertyChangedEventArgs v, ConnectorViewModel newConnector) => v.PropertyName is "Start" or "End" && (newConnector.Start is null || newConnector.End is null);
+
+    private void Connect(ConnectorViewModel newConnector)
+    {
+        if (newConnector.Start?.Parent?.Content is OutputBuilding outputBuilding &&
+            newConnector.End?.Parent?.Content is InputBuilding inputBuilding)
+        {
+            new BuildingConnector(this).ConnectBuildings(
+                ComputeOutputIndex(newConnector),
+                ComputeInputIndex(newConnector),
+                inputBuilding,
+                outputBuilding
+            );
+        }
+    }
 
 
     private static uint ComputeInputIndex(ConnectorViewModel newConnector) =>

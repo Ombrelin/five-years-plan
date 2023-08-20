@@ -23,11 +23,352 @@ public class SplitterViewModelTests
     }
 
     [Fact]
-    public void RecomputeResourceFlowsFromIO_NoOutputFlowConnected_AllOutputsAtZero()
+    public void Connect_NoOutputFlowConnected_AllOutputsAtZero()
     {
         // Given
-        var miner = new MinerViewModel();
-        var fakeBuildingContext = new FakeBuildingContextProvider
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+
+        // When
+        ConnectMinerToTarget(fakeBuildingContext);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
+    }
+
+    [Fact]
+    public void Connect_OneOutputFlowConnected_FullOutputFlowFromInputOnIt()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+
+        // When
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+        ;
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), endBuilding.RecomputedResourceFlow);
+    }
+
+
+    [Fact]
+    public void Connect_TwoOutputFlowConnectedCase1_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+
+        // When
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), endBuilding.RecomputedResourceFlow);
+    }
+
+
+    [Fact]
+    public void Connect_TwoOutputFlowConnectedCase2_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+
+        // When
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), endBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Connect_TwoOutputFlowConnectedCase3_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+
+        // When
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), endBuilding.RecomputedResourceFlow);
+    }
+
+
+    [Fact]
+    public void Connect_ThreeOutputFlowConnectedOrder1_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+        
+        // When
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Connect_ThreeOutputFlowConnectedOrder2_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+        
+        // When
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Connect_ThreeOutputFlowConnectedOrder3_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+        
+        // When
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Connect_ThreeOutputFlowConnectedOrder4_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+
+        // When
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Connect_ThreeOutputFlowConnectedOrder5_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+        // When
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+
+    [Fact]
+    public void Connect_ThreeOutputFlowConnectedOrder6_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+
+        // When
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Disconnect_ThreeOutputFlowConnectedRestoreToTwo_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+        EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
+
+        // When
+        DisconnectEndBuildingFromTarget(fakeBuildingContext, 0, previousEndBuilding);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), thirdEndBuilding.RecomputedResourceFlow);
+    }
+    
+    [Fact]
+    public void Disconnect_TwoOutputFlowConnectedRestoreToOne_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+        EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
+
+        // When
+        DisconnectEndBuildingFromTarget(fakeBuildingContext, 2, thirdEndBuilding);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), thirdEndBuilding.RecomputedResourceFlow);
+    }
+
+    [Fact]
+    public void Disconnect_OneOutputFlowConnectedRestoreToZeroOutput_SplitInputOnEach()
+    {
+        // Given
+        FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
+        ConnectMinerToTarget(fakeBuildingContext);
+        EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
+
+        // When
+        DisconnectEndBuildingFromTarget(fakeBuildingContext, 1, endBuilding);
+
+        // Then
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
+
+        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), endBuilding.RecomputedResourceFlow);
+    }
+
+    
+    
+    private FakeBuildingContextProvider FakeBuildingContextProviderWithTarget() =>
+        new()
         {
             Buildings =
             {
@@ -40,171 +381,29 @@ public class SplitterViewModelTests
             }
         };
 
-
-        // When
-        new BuildingConnector(fakeBuildingContext).ConnectBuildings(0,0, target, miner);
-
-
-        // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
-        
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
-    }
-    
-    [Fact]
-    public EndBuilding OneOutputFlowConnected_FullOutputFlowFromInputOnIt()
+    private void ConnectMinerToTarget(FakeBuildingContextProvider fakeBuildingContextProvider)
     {
-        // Given
-        
-        var endBuilding = new EndBuilding();
-        var fakeBuildingContext = new FakeBuildingContextProvider
+        var miner = new MinerViewModel();
+        fakeBuildingContextProvider.Buildings[miner.Id] = new Dictionary<uint, DynamicFlowBuilding?>
         {
-            Buildings =
-            {
-                [target.Id] = new Dictionary<uint, DynamicFlowBuilding?>
-                {
-                    [0] = endBuilding,
-                    [1] = null,
-                    [2] = null
-                }
-            }
+            [0] = target
         };
+        new BuildingConnector(fakeBuildingContextProvider).ConnectBuildings(0, 0, target, miner);
+    }
 
-        RecomputeResourceFlowsFromIO_NoOutputFlowConnected_AllOutputsAtZero();
-
-
-        // When
-        new BuildingConnector(fakeBuildingContext).ConnectBuildings(0,0, endBuilding, target);
-
-        // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
-
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
-        
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), endBuilding.RecomputedResourceFlow);
+    private EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext,
+        uint outputIndex = 0)
+    {
+        var endBuilding = new EndBuilding();
+        fakeBuildingContext.Buildings[target.Id][outputIndex] = endBuilding;
+        new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;
     }
-    
-    
-    [Fact]
-    public void RecomputeResourceFlowsFromIO_TwoOutputFlowConnectedCase1_SplitInputOnEach()
+
+    private void DisconnectEndBuildingFromTarget(FakeBuildingContextProvider fakeBuildingContext, uint outputIndex, DynamicFlowBuilding disconnected)
     {
-        // Given
-        var previousEndBuilding = OneOutputFlowConnected_FullOutputFlowFromInputOnIt();
-
-        var endBuilding = new EndBuilding();
-        var fakeBuildingContext = new FakeBuildingContextProvider
-        {
-            Buildings =
-            {
-                [target.Id] = new Dictionary<uint, DynamicFlowBuilding?>
-                {
-                    [0] = previousEndBuilding,
-                    [1] = null,
-                    [2] = endBuilding
-                }
-            }
-        };
-
-        // When
-        new BuildingConnector(fakeBuildingContext).ConnectBuildings(0,0, endBuilding, target);
-
-        // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow3);
-        
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), previousEndBuilding.RecomputedResourceFlow);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), endBuilding.RecomputedResourceFlow);
-
+        fakeBuildingContext.Buildings[target.Id][outputIndex] = null;
+        new BuildingConnector(fakeBuildingContext).DisconnectBuilding(outputIndex, 0, disconnected, target);
     }
-    
-    /*
-    [Fact]
-    public void RecomputeResourceFlowsFromIO_TwoOutputFlowConnectedCase2_SplitInputOnEach()
-    {
-        // Given
-        target.InputResourceFlows[0] = new ResourceFlow(new Resource("Iron Ore"), 30);
-
-
-        // When
-        target.RecomputeOutput(new Dictionary<uint, bool>
-        {
-            [0] = false,
-            [1] = true,
-            [2] = true
-        });
-
-        // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow3);
-    }
-    
-    [Fact]
-    public void RecomputeResourceFlowsFromIO_TwoOutputFlowConnectedCase3_SplitInputOnEach()
-    {
-        // Given
-        target.InputResourceFlows[0] = new ResourceFlow(new Resource("Iron Ore"), 30);
-
-
-        // When
-        target.RecomputeOutput(new Dictionary<uint, bool>
-        {
-            [0] = true,
-            [1] = true,
-            [2] = false
-        });
-
-        // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow3);
-    }
-
-    
-    [Fact]
-    public void RecomputeResourceFlowsFromIO_ThreeOutputFlowConnected_SplitInputOnEach()
-    {
-        // Given
-        target.InputResourceFlows[0] = new ResourceFlow(new Resource("Iron Ore"), 30);
-
-
-        // When
-        target.RecomputeOutput(new Dictionary<uint, bool>
-        {
-            [0] = true,
-            [1] = true,
-            [2] = true
-        });
-
-        // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 10), target.OutPutResourceFlow3);
-    }
-    */
 }
