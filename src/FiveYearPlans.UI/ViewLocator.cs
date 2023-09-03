@@ -3,9 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
-using NodeEditorDemo.ViewModels;
 using NodeEditorDemo.Views.Nodes;
 
 namespace NodeEditorDemo;

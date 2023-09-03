@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings;
+using Microsoft.Extensions.Logging;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;
 
@@ -13,9 +14,11 @@ namespace NodeEditorDemo.Services;
 internal class DrawingAdapter : IBuildingContextProvider
 {
     public IDrawingNode Drawing { get; }
+    private readonly ILogger<DrawingAdapter>? logger;
 
-    public DrawingAdapter()
+    public DrawingAdapter(ILogger<DrawingAdapter>? logger)
     {
+        this.logger = logger;
         Drawing = CreateDemoDrawing();
     }
 
@@ -41,29 +44,35 @@ internal class DrawingAdapter : IBuildingContextProvider
 
         connectors.CollectionChanged += (e, a) =>
         {
-            if (a.OldItems?.Count > 0 && a.OldItems[0] is ConnectorViewModel deletedConnector)
+            try
             {
-                Disconnect(deletedConnector);
-                return;
-            }
-
-            if (a.NewItems is null)
-            {
-                return;
-            }
-            
-            if (a.NewItems[0] is ConnectorViewModel newConnector)
-            {
-                newConnector.PropertyChanged += (t, v) =>
+                if (a.OldItems?.Count > 0 && a.OldItems[0] is ConnectorViewModel deletedConnector)
                 {
+                    Disconnect(deletedConnector);
+                    return;
+                }
 
-                    if (v.PropertyName is not "End")
+                if (a.NewItems is null)
+                {
+                    return;
+                }
+
+                if (a.NewItems[0] is ConnectorViewModel newConnector)
+                {
+                    newConnector.PropertyChanged += (t, v) =>
                     {
-                        return;
-                    }
+                        if (v.PropertyName is not "End")
+                        {
+                            return;
+                        }
 
-                    Connect(newConnector);
-                };
+                        Connect(newConnector);
+                    };
+                }
+            }
+            catch (Exception? exception)
+            {
+                logger.LogError(exception, "Action error");
             }
         };
 
@@ -84,7 +93,8 @@ internal class DrawingAdapter : IBuildingContextProvider
         }
     }
 
-    private static bool IsDisconnect(PropertyChangedEventArgs v, ConnectorViewModel newConnector) => v.PropertyName is "Start" or "End" && (newConnector.Start is null || newConnector.End is null);
+    private static bool IsDisconnect(PropertyChangedEventArgs v, ConnectorViewModel newConnector) =>
+        v.PropertyName is "Start" or "End" && (newConnector.Start is null || newConnector.End is null);
 
     private void Connect(ConnectorViewModel newConnector)
     {
@@ -119,7 +129,7 @@ internal class DrawingAdapter : IBuildingContextProvider
             .ToList()
             .IndexOf(newConnector.Start);
 
-    public IReadOnlyDictionary<uint, DynamicFlowBuilding?> GetOutputConnectionState(Guid id)
+    public IReadOnlyDictionary<uint, Building?> GetOutputConnectionState(Guid id)
     {
         var pins = Drawing
             .Nodes
@@ -128,13 +138,13 @@ internal class DrawingAdapter : IBuildingContextProvider
         return GetOutputConnectionState(pins);
     }
 
-    private IReadOnlyDictionary<uint, DynamicFlowBuilding?> GetOutputConnectionState(IEnumerable<IPin> pins) =>
+    private IReadOnlyDictionary<uint, Building?> GetOutputConnectionState(IEnumerable<IPin> pins) =>
         pins
             .Where(pin => pin.Alignment is PinAlignment.Right)
             .Select((pin, index) => (Index: (uint)index, Building: GetBuilding(pin)))
             .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
-    
-    private DynamicFlowBuilding? GetBuilding(IPin pin)
+
+    private Building? GetBuilding(IPin pin)
     {
         IConnector? firstOrDefault = Drawing.Connectors.FirstOrDefault(connector => connector.Start == pin);
 
@@ -142,9 +152,8 @@ internal class DrawingAdapter : IBuildingContextProvider
         {
             return null;
         }
-        
-        return firstOrDefault.End.Parent
-            .Content as DynamicFlowBuilding;
-    }
 
+        return firstOrDefault.End.Parent
+            .Content as Building;
+    }
 }

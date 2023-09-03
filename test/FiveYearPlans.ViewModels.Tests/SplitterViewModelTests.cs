@@ -1,4 +1,7 @@
+using System.Collections.ObjectModel;
+using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
+using FiveYearPlans.ViewModels.Recipes;
 using FiveYearPlans.ViewModels.Tests.Fakes;
 using NSubstitute;
 
@@ -7,6 +10,14 @@ namespace FiveYearPlans.ViewModels.Tests;
 public class SplitterViewModelTests
 {
     private readonly SplitterViewModel target = new();
+
+    //private readonly BuildingTestHelper helper;
+//
+    //public SplitterViewModelTests()
+    //{
+    //    helper = new BuildingTestHelper(target);
+    //}
+
 
     [Fact]
     public void RecomputeResourceFlowsFromIO_MoreThanOneInputThrows()
@@ -149,7 +160,7 @@ public class SplitterViewModelTests
         ConnectMinerToTarget(fakeBuildingContext);
         EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
-        
+
         // When
         EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
 
@@ -174,7 +185,7 @@ public class SplitterViewModelTests
         ConnectMinerToTarget(fakeBuildingContext);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
         EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
-        
+
         // When
         EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
 
@@ -199,7 +210,7 @@ public class SplitterViewModelTests
         ConnectMinerToTarget(fakeBuildingContext);
         EndBuilding thirdEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 1);
-        
+
         // When
         EndBuilding previousEndBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
 
@@ -318,7 +329,7 @@ public class SplitterViewModelTests
         Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), endBuilding.RecomputedResourceFlow);
         Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 15), thirdEndBuilding.RecomputedResourceFlow);
     }
-    
+
     [Fact]
     public void Disconnect_TwoOutputFlowConnectedRestoreToOne_SplitInputOnEach()
     {
@@ -365,14 +376,13 @@ public class SplitterViewModelTests
         Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), endBuilding.RecomputedResourceFlow);
     }
 
-    
-    
+
     private FakeBuildingContextProvider FakeBuildingContextProviderWithTarget() =>
         new()
         {
             Buildings =
             {
-                [target.Id] = new Dictionary<uint, DynamicFlowBuilding?>
+                [target.Id] = new Dictionary<uint, Building?>
                 {
                     [0] = null,
                     [1] = null,
@@ -383,25 +393,48 @@ public class SplitterViewModelTests
 
     private void ConnectMinerToTarget(FakeBuildingContextProvider fakeBuildingContextProvider)
     {
-        var miner = new MinerViewModel();
-        fakeBuildingContextProvider.Buildings[miner.Id] = new Dictionary<uint, DynamicFlowBuilding?>
+        MinerViewModel miner = BuildIronOreMiner();
+        fakeBuildingContextProvider.Buildings[miner.Id] = new Dictionary<uint, Building?>
         {
             [0] = target
         };
         new BuildingConnector(fakeBuildingContextProvider).ConnectBuildings(0, 0, target, miner);
     }
 
+    public MinerViewModel BuildIronOreMiner()
+    {
+        return new MinerViewModel()
+        {
+            PossibleRecipes = new ObservableCollection<Recipe>
+            {
+                new Recipe(
+                    "Iron Ore",
+                    Array.Empty<ResourceFlow>(),
+                    new[]
+                    {
+                        new ResourceFlow(
+                            new Resource("Iron Ore"),
+                            30
+                        )
+                    })
+            }
+        };
+    }
+
+
     private EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext,
         uint outputIndex = 0)
     {
         var endBuilding = new EndBuilding();
+        fakeBuildingContext.Buildings[endBuilding.Id] = new Dictionary<uint, Building?>();
         fakeBuildingContext.Buildings[target.Id][outputIndex] = endBuilding;
         new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;
     }
 
-    private void DisconnectEndBuildingFromTarget(FakeBuildingContextProvider fakeBuildingContext, uint outputIndex, DynamicFlowBuilding disconnected)
+    private void DisconnectEndBuildingFromTarget(FakeBuildingContextProvider fakeBuildingContext, uint outputIndex,
+        InputBuilding disconnected)
     {
         fakeBuildingContext.Buildings[target.Id][outputIndex] = null;
         new BuildingConnector(fakeBuildingContext).DisconnectBuilding(outputIndex, 0, disconnected, target);

@@ -1,39 +1,29 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Avalonia;
+using Serilog;
 
 namespace NodeEditorDemo;
 
 class Program
 {
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        try
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error(e, "Application Crashed");
+        }
+    }
 
     static Program()
     {
         App.EnableInputOutput = true;
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER")))
-        {
-            App.EnableMainMenu = true;
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            App.EnableMainMenu = true;
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            App.EnableMainMenu = false;
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            App.EnableMainMenu = false;
-        }
-        else
-        {
-            App.EnableMainMenu = true;
-        }
+        App.EnableMainMenu = true;
     }
 
     public static AppBuilder BuildAvaloniaApp()

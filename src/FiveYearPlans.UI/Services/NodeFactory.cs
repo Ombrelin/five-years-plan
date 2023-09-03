@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
+using FiveYearPlans.ViewModels.Recipes;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;
 
@@ -10,7 +11,8 @@ namespace NodeEditorDemo.Services;
 
 public class NodeFactory : INodeFactory
 {
-    internal static INode CreateMiner(double x, double y, double width = 270, double height = 90, double pinSize = 10, string name = "MINER")
+    internal static INode CreateMiner(double x, double y, double width = 270, double height = 90, double pinSize = 10,
+        string name = "MINER")
     {
         var node = new NodeViewModel
         {
@@ -21,14 +23,50 @@ public class NodeFactory : INodeFactory
             Height = height,
             Pins = new ObservableCollection<IPin>(),
             Content = new MinerViewModel()
+            {
+                PossibleRecipes = new ObservableCollection<Recipe>
+                {
+                    new(
+                        "Iron Ore",
+                        Array.Empty<ResourceFlow>(),
+                        new[]
+                        {
+                            new ResourceFlow(
+                                new Resource("Iron Ore"),
+                                30
+                            )
+                        }),
+                    new(
+                        "Limestone",
+                        Array.Empty<ResourceFlow>(),
+                        new[]
+                        {
+                            new ResourceFlow(
+                                new Resource("Limestone"),
+                                30
+                            )
+                        }),
+                    new(
+                        "Copper Ore",
+                        Array.Empty<ResourceFlow>(),
+                        new[]
+                        {
+                            new ResourceFlow(
+                                new Resource("Copper Ore"),
+                                30
+                            )
+                        })
+                }
+            }
         };
-        
+
         node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
 
         return node;
     }
-    
-    internal static INode CreateBuilder(double x, double y, double width = 270, double height = 90, double pinSize = 10, string name = "BUILDER")
+
+    internal static INode CreateBuilder(double x, double y, double width = 270, double height = 90, double pinSize = 10,
+        string name = "BUILDER")
     {
         var node = new NodeViewModel
         {
@@ -40,14 +78,15 @@ public class NodeFactory : INodeFactory
             Pins = new ObservableCollection<IPin>(),
             Content = new BuilderViewModel()
         };
-        
+
         node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
         node.AddPin(0, height / 2, pinSize, pinSize, PinAlignment.Left, $"L-{Guid.NewGuid()}");
-        
+
         return node;
     }
-    
-    internal static INode CreateSplitter(double x, double y, double width = 270, double height = 90, double pinSize = 10, string name = "SPLITTER")
+
+    internal static INode CreateSplitter(double x, double y, double width = 270, double height = 90,
+        double pinSize = 10, string name = "SPLITTER")
     {
         var node = new NodeViewModel
         {
@@ -59,15 +98,15 @@ public class NodeFactory : INodeFactory
             Pins = new ObservableCollection<IPin>(),
             Content = new SplitterViewModel()
         };
-        
-        node.AddPin(width, height / 2 , pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
+
+        node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
         node.AddPin(width, height / 2 + 8, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
         node.AddPin(width, height / 2 + 16, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
         node.AddPin(0, height / 2, pinSize, pinSize, PinAlignment.Left, $"L-{Guid.NewGuid()}");
-        
+
         return node;
     }
-    
+
     public IDrawingNode CreateDrawing(string? name = null)
     {
         var drawing = new DrawingNodeViewModel

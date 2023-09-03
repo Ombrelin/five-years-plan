@@ -1,20 +1,36 @@
 using FiveYearPlans.ViewModels.Buildings;
+using FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 namespace FiveYearPlans.ViewModels.Tests.Fakes;
 
-public class EndBuilding : Building, InputBuilding, DynamicFlowBuilding
+public class EndBuilding : DynamicFlowBuilding, InputBuilding
 {
-    public Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();
-    
-    public ResourceFlow? RecomputedResourceFlow { get; private set; }
-    
-    public void RecomputeOutput(IBuildingContextProvider buildingContextProvider)
+    protected override void ComputeOutputFromInput(KeyValuePair<uint, Building>[] connectedOutputs,
+        IReadOnlyDictionary<uint, Building?> outputConnectionState)
     {
         KeyValuePair<uint, ResourceFlow>? input = InputResourceFlows.SingleOrDefault();
         if (input is not null)
         {
             RecomputedResourceFlow = input.Value.Value;
         }
-        
     }
+
+    protected override void UpdateFlows()
+    {
+        //throw new NotImplementedException();
+    }
+
+    protected override void EmptyOutput()
+    {
+        //throw new NotImplementedException();
+    }
+
+    public override Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();
+
+    public override Dictionary<uint, ResourceFlow> OutPutResourceFlows { get; } =
+        new Dictionary<uint, ResourceFlow?>();
+
+    public ResourceFlow? RecomputedResourceFlow { get; private set; }
+
+    protected override bool FlowsUpdateNeeded() => true;
 }

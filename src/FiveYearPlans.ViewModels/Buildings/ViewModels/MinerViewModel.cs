@@ -1,4 +1,8 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FiveYearPlans.ViewModels.Recipes;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
@@ -6,13 +10,42 @@ namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 public partial class MinerViewModel : Building, OutputBuilding
 {
     [ObservableProperty] private ResourceFlow outPutResourceFlow;
-    
+    [ObservableProperty] private Recipe recipe;
+    [ObservableProperty] private ObservableCollection<Recipe> possibleRecipes;
+
+    [JsonConstructor]
     public MinerViewModel()
     {
-        OutPutResourceFlow = new ResourceFlow(new Resource("Iron Ore"), 30);
+        PropertyChanged += OnPropertyChangedEventHandler;
     }
-    
-    public IReadOnlyDictionary<uint, ResourceFlow> OutPutResourceFlows => new Dictionary<uint, ResourceFlow>
+
+    private void OnPropertyChangedEventHandler(object? _, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName == nameof(Recipe))
+        {
+            ReactToRecipeUpdate();
+        }
+        else if (args.PropertyName == nameof(PossibleRecipes))
+        {
+            ReactToPossibleRecipeUpdate();
+        }
+    }
+
+    private void ReactToPossibleRecipeUpdate()
+    {
+        Recipe = PossibleRecipes.First();
+    }
+
+    private void ReactToRecipeUpdate()
+    {
+        this.OutPutResourceFlow = Recipe.Products.Single();
+        if (buildingsProvider is not null)
+        {
+            RecomputeChildren(buildingsProvider, buildingsProvider.GetOutputConnectionState(Id).ToArray());
+        }
+    }
+
+    public override Dictionary<uint, ResourceFlow> OutPutResourceFlows => new()
     {
         [0] = outPutResourceFlow
     };

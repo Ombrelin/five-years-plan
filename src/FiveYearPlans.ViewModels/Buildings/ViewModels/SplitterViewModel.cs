@@ -1,9 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
 [ObservableObject]
-public partial class SplitterViewModel : Building, OutputBuilding, DynamicFlowBuilding
+public partial class SplitterViewModel : DynamicFlowBuilding, OutputBuilding
 {
     [ObservableProperty] private ResourceFlow? outPutResourceFlow1;
     [ObservableProperty] private ResourceFlow? outPutResourceFlow2;
@@ -11,54 +12,26 @@ public partial class SplitterViewModel : Building, OutputBuilding, DynamicFlowBu
 
     [ObservableProperty] private ResourceFlow? inputResourceFlow;
 
-
-    public IReadOnlyDictionary<uint, ResourceFlow?> OutPutResourceFlows { get; private set; } =
-        new Dictionary<uint, ResourceFlow?>()
-        {
-            [0] = null,
-            [1] = null,
-            [2] = null,
-        };
-
-    public Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();
-
-    public void RecomputeOutput(IBuildingContextProvider buildingContextProvider)
+    private Dictionary<uint, ResourceFlow?> outPutResourceFlows = new()
     {
-        IReadOnlyDictionary<uint, DynamicFlowBuilding?> outputConnectionState =
-            buildingContextProvider.GetOutputConnectionState(Id);
+        [0] = null,
+        [1] = null,
+        [2] = null,
+    };
 
-        var connectedOutputs = GetConnectedOutputs(outputConnectionState);
 
-        if (!InputResourceFlows.Any())
-        {
-            EmptyOutput();
-        }
-        else
-        {
-            ComputeOutputFromInput(connectedOutputs, outputConnectionState);
-        }
+    public override Dictionary<uint, ResourceFlow> OutPutResourceFlows => outPutResourceFlows;
 
-        if (FlowsUpdateNeeded())
-        {
-            UpdateFlows();
-            RecomputeChildren(buildingContextProvider, connectedOutputs);
-        }
-    }
+    public override Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();
 
-    private void RecomputeChildren(IBuildingContextProvider buildingContextProvider, KeyValuePair<uint, DynamicFlowBuilding>[] connectedOutputs)
+
+    protected override bool FlowsUpdateNeeded() => OutPutResourceFlows[0] != OutPutResourceFlow1 ||
+                                                   OutPutResourceFlows[1] != OutPutResourceFlow2 ||
+                                                   OutPutResourceFlows[2] != OutPutResourceFlow3;
+
+    protected override void UpdateFlows()
     {
-        foreach ((uint Index, DynamicFlowBuilding connectedOutput) in connectedOutputs)
-        {
-            connectedOutput.InputResourceFlows[0] = OutPutResourceFlows[Index]; // TODO: Handle multi input buildings
-            connectedOutput.RecomputeOutput(buildingContextProvider);
-        }
-    }
-
-    private bool FlowsUpdateNeeded() => OutPutResourceFlows[0] != OutPutResourceFlow1 || OutPutResourceFlows[1] != OutPutResourceFlow2|| OutPutResourceFlows[2] != OutPutResourceFlow3;
-
-    private void UpdateFlows()
-    {
-        OutPutResourceFlows = new Dictionary<uint, ResourceFlow?>()
+        outPutResourceFlows = new Dictionary<uint, ResourceFlow?>()
         {
             [0] = OutPutResourceFlow1,
             [1] = OutPutResourceFlow2,
@@ -66,7 +39,8 @@ public partial class SplitterViewModel : Building, OutputBuilding, DynamicFlowBu
         };
     }
 
-    private void ComputeOutputFromInput(KeyValuePair<uint, DynamicFlowBuilding>[] connectedOutputs, IReadOnlyDictionary<uint, DynamicFlowBuilding?> outputConnectionState)
+    protected override void ComputeOutputFromInput(KeyValuePair<uint, Building>[] connectedOutputs,
+        IReadOnlyDictionary<uint, Building?> outputConnectionState)
     {
         InputResourceFlow = InputResourceFlows.Single().Value;
 
@@ -92,18 +66,10 @@ public partial class SplitterViewModel : Building, OutputBuilding, DynamicFlowBu
         }
     }
 
-    private void EmptyOutput()
+    protected override void EmptyOutput()
     {
         OutPutResourceFlow1 = null;
         OutPutResourceFlow2 = null;
         OutPutResourceFlow3 = null;
-    }
-
-    private static KeyValuePair<uint, DynamicFlowBuilding>[] GetConnectedOutputs(IReadOnlyDictionary<uint, DynamicFlowBuilding?> outputConnectionState)
-    {
-        var connectedOutputs = outputConnectionState
-            .Where(kvp => kvp.Value is not null)
-            .ToArray() as KeyValuePair<uint, DynamicFlowBuilding>[];
-        return connectedOutputs;
     }
 }

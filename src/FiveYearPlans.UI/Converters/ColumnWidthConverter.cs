@@ -8,8 +8,8 @@ namespace NodeEditorDemo.Converters;
 
 public class ColumnWidthConverter : IValueConverter
 {
-    public static ColumnWidthConverter Instance = new ();
-    
+    public static ColumnWidthConverter Instance = new();
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool flag && parameter is double width)

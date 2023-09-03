@@ -49,14 +49,14 @@ public partial class MainViewViewModel : ViewModelBase
     [RelayCommand]
     private void New()
     {
-        if (Editor?.Factory is { })
+        if (Editor?.Factory is not null)
         {
             Editor.Drawing = Editor.Factory.CreateDrawing();
             Editor.Drawing.SetSerializer(Editor.Serializer);
         }
     }
 
-    private List<FilePickerFileType> GetOpenFileTypes()
+    private static List<FilePickerFileType> GetOpenFileTypes()
     {
         return new List<FilePickerFileType>
         {
@@ -108,17 +108,17 @@ public partial class MainViewViewModel : ViewModelBase
             AllowMultiple = false
         });
 
-        var file = result.FirstOrDefault();
+        IStorageFile? file = result.FirstOrDefault();
 
         if (file is not null)
         {
             try
             {
-                await using var stream = await file.OpenReadAsync();
+                await using Stream stream = await file.OpenReadAsync();
                 using var reader = new StreamReader(stream);
                 var json = await reader.ReadToEndAsync();
                 var drawing = Editor.Serializer.Deserialize<DrawingNodeViewModel?>(json);
-                if (drawing is { })
+                if (drawing is not null)
                 {
                     Editor.Drawing = drawing;
                     Editor.Drawing.SetSerializer(Editor.Serializer);
@@ -140,13 +140,13 @@ public partial class MainViewViewModel : ViewModelBase
             return;
         }
 
-        var storageProvider = StorageService.GetStorageProvider();
+        IStorageProvider? storageProvider = StorageService.GetStorageProvider();
         if (storageProvider is null)
         {
             return;
         }
 
-        var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        IStorageFile? file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Save drawing",
             FileTypeChoices = GetSaveFileTypes(),

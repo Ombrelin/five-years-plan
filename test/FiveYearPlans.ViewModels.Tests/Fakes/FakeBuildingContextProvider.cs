@@ -4,8 +4,8 @@ namespace FiveYearPlans.ViewModels.Tests.Fakes;
 
 public class FakeBuildingContextProvider : IBuildingContextProvider
 {
-    public IDictionary<Guid, Dictionary<uint, DynamicFlowBuilding?>> Buildings { get; } =
-        new Dictionary<Guid, Dictionary<uint, DynamicFlowBuilding?>>();
+    public IDictionary<Guid, Dictionary<uint, Building?>> Buildings { get; } =
+        new Dictionary<Guid, Dictionary<uint, Building?>>();
 
-    public IReadOnlyDictionary<uint, DynamicFlowBuilding?> GetOutputConnectionState(Guid id) => Buildings[id];
+    public IReadOnlyDictionary<uint, Building?> GetOutputConnectionState(Guid id) => Buildings[id];
 }

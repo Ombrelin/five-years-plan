@@ -58,7 +58,10 @@ internal static class StorageService
 
     public static IStorageProvider? GetStorageProvider()
     {
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: { } window })
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
+            {
+                MainWindow: { } window
+            })
         {
             return window.StorageProvider;
         }

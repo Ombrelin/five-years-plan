@@ -8,65 +8,65 @@
              Name="NodeEditor"
              RequestedThemeVariant="Dark">
 
-  <Application.DataTemplates>
-    <local:ViewLocator />
-  </Application.DataTemplates>
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
 
-  <Application.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <MergeResourceInclude Source="/Styles/Themes.axaml" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Application.Resources>
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="/Styles/Themes.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 
-  <Application.Styles>
+    <Application.Styles>
 
-    <FluentTheme />
+        <FluentTheme />
 
-    <StyleInclude Source="avares://NodeEditorAvalonia/Themes/NodeEditorTheme.axaml" />
+        <StyleInclude Source="avares://NodeEditorAvalonia/Themes/NodeEditorTheme.axaml" />
 
-    <StyleInclude Source="avares://FiveYearPlans.UI/Styles/Nodes.axaml" />
-    <StyleInclude Source="avares://FiveYearPlans.UI/Styles/Icons.axaml" />
+        <StyleInclude Source="avares://FiveYearPlans.UI/Styles/Nodes.axaml" />
+        <StyleInclude Source="avares://FiveYearPlans.UI/Styles/Icons.axaml" />
 
-    <Style Selector="MenuItem /template/ ContentPresenter#PART_IconPresenter">
-      <Setter Property="Width" Value="20" />
-      <Setter Property="Height" Value="20" />
-    </Style>
+        <Style Selector="MenuItem /template/ ContentPresenter#PART_IconPresenter">
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Height" Value="20" />
+        </Style>
 
-    <Style Selector="Separator.horizontal">
-      <Setter Property="Margin" Value="0" />
-      <Setter Property="Height" Value="1" />
-      <Setter Property="Opacity" Value="0.1" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="Background" Value="{DynamicResource SeparatorBackground}" />
-    </Style>
+        <Style Selector="Separator.horizontal">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Opacity" Value="0.1" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="{DynamicResource SeparatorBackground}" />
+        </Style>
 
-    <Style Selector="Separator.vertical">
-      <Setter Property="Margin" Value="0" />
-      <Setter Property="Width" Value="1" />
-      <Setter Property="Height" Value="NaN" />
-      <Setter Property="Opacity" Value="0.1" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="VerticalAlignment" Value="Stretch" />
-      <Setter Property="Background" Value="{DynamicResource SeparatorBackground}" />
-    </Style>
+        <Style Selector="Separator.vertical">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Width" Value="1" />
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="Opacity" Value="0.1" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="{DynamicResource SeparatorBackground}" />
+        </Style>
 
-    <Style Selector="export|ExportRoot">
-      <Setter Property="(TextElement.FontFamily)" Value="avares://Avalonia.Fonts.Inter/Assets#Inter" />
-    </Style>
+        <Style Selector="export|ExportRoot">
+            <Setter Property="(TextElement.FontFamily)" Value="avares://Avalonia.Fonts.Inter/Assets#Inter" />
+        </Style>
 
-  </Application.Styles>
+    </Application.Styles>
 
-  <NativeMenu.Menu>
-    <NativeMenu>
-      <NativeMenuItem Header="About NodeEditor" 
-                      Command="{Binding AboutCommand}" />
-      <NativeMenuItemSeparator/>
-      <NativeMenuItem Header="Quit NodeEditor" 
-                      Command="{Binding ExitCommand}" 
-                      Gesture="{OnPlatform macOS=CMD+Q, iOS=CMD+Q, Default=Ctrl+Q}"/>
-    </NativeMenu>
-  </NativeMenu.Menu>
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="About NodeEditor"
+                            Command="{Binding AboutCommand}" />
+            <NativeMenuItemSeparator />
+            <NativeMenuItem Header="Quit NodeEditor"
+                            Command="{Binding ExitCommand}"
+                            Gesture="{OnPlatform macOS=CMD+Q, iOS=CMD+Q, Default=Ctrl+Q}" />
+        </NativeMenu>
+    </NativeMenu.Menu>
 
 </Application>

@@ -15,14 +15,15 @@ internal static class ExportRenderer
     private static void Render(Control target, SKCanvas canvas, double dpi = 96)
     {
         using var drawingContextImpl = DrawingContextHelper.WrapSkiaCanvas(canvas, new Vector(dpi, dpi));
-        var platformDrawingContextType = typeof(DrawingContext).Assembly.GetType("Avalonia.Media.PlatformDrawingContext");
+        var platformDrawingContextType =
+            typeof(DrawingContext).Assembly.GetType("Avalonia.Media.PlatformDrawingContext");
         if (platformDrawingContextType is { })
         {
             var drawingContext = (DrawingContext?)Activator.CreateInstance(
                 platformDrawingContextType,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, 
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null,
-                new object?[] { drawingContextImpl, true }, 
+                new object?[] { drawingContextImpl, true },
                 null);
             if (drawingContext is { })
             {
@@ -73,7 +74,7 @@ internal static class ExportRenderer
         target.Arrange(new Rect(size));
         Render(target, canvas, dpi);
     }
-    
+
     public static void RenderXps(Control target, Size size, Stream stream, double dpi = 72)
     {
         using var managedWStream = new SKManagedWStream(stream);

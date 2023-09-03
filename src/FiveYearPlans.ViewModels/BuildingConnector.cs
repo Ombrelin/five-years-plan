@@ -1,4 +1,5 @@
-using FiveYearPlans.ViewModels.Buildings.ViewModels;
+using FiveYearPlans.ViewModels.Buildings;
+using FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 namespace FiveYearPlans.ViewModels;
 
@@ -14,6 +15,8 @@ public class BuildingConnector
     public void ConnectBuildings(uint outputIndex, uint inputIndex, InputBuilding inputBuilding,
         OutputBuilding outputBuilding)
     {
+        FillProvider(inputBuilding, outputBuilding);
+
         if (outputBuilding is DynamicFlowBuilding dynamicFlowsOutputBuilding)
         {
             dynamicFlowsOutputBuilding.RecomputeOutput(buildingContextProvider);
@@ -26,17 +29,43 @@ public class BuildingConnector
         {
             otherDynamicFlowsOutputBuilding.RecomputeOutput(buildingContextProvider);
         }
+        else if (outputBuilding is Building simpleOutputBuilding)
+        {
+            simpleOutputBuilding.RecomputeChildren(
+                buildingContextProvider,
+                buildingContextProvider.GetOutputConnectionState(simpleOutputBuilding.Id).ToArray());
+        }
 
         if (inputBuilding is DynamicFlowBuilding dynamicFlowsInputBuilding)
         {
             dynamicFlowsInputBuilding.RecomputeOutput(buildingContextProvider);
         }
+        else if (inputBuilding is Building simpleInputBuilding)
+        {
+            simpleInputBuilding.RecomputeChildren(
+                buildingContextProvider,
+                buildingContextProvider.GetOutputConnectionState(simpleInputBuilding.Id).ToArray());
+        }
     }
 
-    public void DisconnectBuilding(uint outputIndex, uint inputIndex, InputBuilding inputBuilding, OutputBuilding outputBuilding)
+    private void FillProvider(InputBuilding inputBuilding, OutputBuilding outputBuilding)
+    {
+        if (inputBuilding is Building simpleInputBuilding)
+        {
+            simpleInputBuilding.buildingsProvider = buildingContextProvider;
+        }
+
+        if (outputBuilding is Building simpleOutputBuilding)
+        {
+            simpleOutputBuilding.buildingsProvider = buildingContextProvider;
+        }
+    }
+
+    public void DisconnectBuilding(uint outputIndex, uint inputIndex, InputBuilding inputBuilding,
+        OutputBuilding outputBuilding)
     {
         inputBuilding.InputResourceFlows[inputIndex] = new ResourceFlow(new Resource("Nothing"), 0);
-        
+
         if (outputBuilding is DynamicFlowBuilding otherDynamicFlowsOutputBuilding)
         {
             otherDynamicFlowsOutputBuilding.RecomputeOutput(buildingContextProvider);
