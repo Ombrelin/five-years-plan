@@ -11,14 +11,6 @@ public class SplitterViewModelTests
 {
     private readonly SplitterViewModel target = new();
 
-    //private readonly BuildingTestHelper helper;
-//
-    //public SplitterViewModelTests()
-    //{
-    //    helper = new BuildingTestHelper(target);
-    //}
-
-
     [Fact]
     public void RecomputeResourceFlowsFromIO_MoreThanOneInputThrows()
     {
