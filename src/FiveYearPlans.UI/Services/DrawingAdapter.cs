@@ -33,13 +33,16 @@ internal class DrawingAdapter : IBuildingContextProvider
             Height = 720,
             Nodes = new ObservableCollection<INode>(),
             Connectors = connectors,
-            EnableMultiplePinConnections = false,
-            EnableSnap = true,
-            SnapX = 15.0,
-            SnapY = 15.0,
-            EnableGrid = true,
-            GridCellWidth = 15.0,
-            GridCellHeight = 15.0,
+            Settings = new DrawingNodeSettingsViewModel()
+            {
+                EnableMultiplePinConnections = false,
+                EnableSnap = true,
+                SnapX = 15.0,
+                SnapY = 15.0,
+                EnableGrid = true,
+                GridCellWidth = 15.0,
+                GridCellHeight = 15.0
+            }
         };
 
         connectors.CollectionChanged += (e, a) =>
