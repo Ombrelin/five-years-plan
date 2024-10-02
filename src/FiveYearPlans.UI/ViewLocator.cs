@@ -25,6 +25,7 @@ public class ViewLocator : IDataTemplate
             {
                 nameof(BuilderViewModel) => new BuilderView(),
                 nameof(SplitterViewModel) => new SplitterView(),
+                nameof(MergerViewModel) => new MergerView(),
                 nameof(MinerViewModel) => new MinerView(),
                 _ => new TextBlock { Text = "Not Found: " + name }
             };

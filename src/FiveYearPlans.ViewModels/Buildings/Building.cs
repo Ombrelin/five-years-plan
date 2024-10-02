@@ -2,7 +2,7 @@ using FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 namespace FiveYearPlans.ViewModels.Buildings;
 
-public abstract class Building
+public abstract class Building : IBuilding
 {
     public IBuildingContextProvider? buildingsProvider;
 
@@ -18,7 +18,8 @@ public abstract class Building
         {
             if (connectedOutput is InputBuilding inputBuilding)
             {
-                inputBuilding.InputResourceFlows[0] = OutPutResourceFlows[Index]; // TODO: Handle multi input buildings
+                var inputToUpdateIndex = GetInputToUpdateIndex(inputBuilding);
+                inputBuilding.InputResourceFlows[inputToUpdateIndex] = OutPutResourceFlows[Index]; 
             }
 
             if (connectedOutput is DynamicFlowBuilding dynamicFlowBuilding)
@@ -26,5 +27,14 @@ public abstract class Building
                 dynamicFlowBuilding.RecomputeOutput(buildingContextProvider);
             }
         }
+    }
+
+    private uint GetInputToUpdateIndex(InputBuilding inputBuilding)
+    {
+        return this
+            .buildingsProvider
+            .GetInputConnectionState(inputBuilding.Id)
+            .First(kvp => kvp.Value is not null && kvp.Value.Id == this.Id)
+            .Key;
     }
 }

@@ -106,6 +106,28 @@ public class NodeFactory : INodeFactory
 
         return node;
     }
+    
+    internal static INode CreateMerger(double x, double y, double width = 270, double height = 90,
+        double pinSize = 10, string name = "MERGER")
+    {
+        var node = new NodeViewModel
+        {
+            Name = name,
+            X = x,
+            Y = y,
+            Width = width,
+            Height = height,
+            Pins = new ObservableCollection<IPin>(),
+            Content = new MergerViewModel()
+        };
+
+        node.AddPin(0, height / 2, pinSize, pinSize, PinAlignment.Left, $"L-{Guid.NewGuid()}");
+        node.AddPin(0, height / 2 + 8, pinSize, pinSize, PinAlignment.Left, $"L-{Guid.NewGuid()}");
+        node.AddPin(0, height / 2 + 16, pinSize, pinSize, PinAlignment.Left, $"L-{Guid.NewGuid()}");
+        node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
+
+        return node;
+    }
 
     public IDrawingNode CreateDrawing(string? name = null)
     {
@@ -148,6 +170,12 @@ public class NodeFactory : INodeFactory
                 Title = "Splitter",
                 Template = CreateSplitter(0, 0),
                 Preview = CreateSplitter(0, 0)
+            },
+            new NodeTemplateViewModel
+            {
+                Title = "Merger",
+                Template = CreateMerger(0, 0),
+                Preview = CreateMerger(0, 0)
             },
             new NodeTemplateViewModel
             {

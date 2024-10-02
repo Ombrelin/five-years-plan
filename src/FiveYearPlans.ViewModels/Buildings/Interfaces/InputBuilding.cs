@@ -1,6 +1,6 @@
-namespace FiveYearPlans.ViewModels;
+namespace FiveYearPlans.ViewModels.Buildings.Interfaces;
 
-public interface InputBuilding
+public interface InputBuilding : IBuilding
 {
     Dictionary<uint, ResourceFlow> InputResourceFlows { get; }
 }

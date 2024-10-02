@@ -4,7 +4,7 @@ using FiveYearPlans.ViewModels.Buildings.Interfaces;
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
 [ObservableObject]
-public partial class SplitterViewModel : DynamicFlowBuilding, OutputBuilding
+public partial class SplitterViewModel : DynamicFlowBuilding
 {
     [ObservableProperty] private ResourceFlow? outPutResourceFlow1;
     [ObservableProperty] private ResourceFlow? outPutResourceFlow2;

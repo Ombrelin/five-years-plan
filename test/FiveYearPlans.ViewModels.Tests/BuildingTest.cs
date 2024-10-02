@@ -19,7 +19,7 @@ public class BuildingTestHelper
     public FakeBuildingContextProvider FakeBuildingContextProviderWithTarget() =>
         new()
         {
-            Buildings =
+            OutputBuildings =
             {
                 [target.Id] = new Dictionary<uint, Building?>
                 {
@@ -33,9 +33,13 @@ public class BuildingTestHelper
     public void ConnectMinerToTarget(FakeBuildingContextProvider fakeBuildingContextProvider)
     {
         MinerViewModel miner = BuildIronOreMiner();
-        fakeBuildingContextProvider.Buildings[miner.Id] = new Dictionary<uint, Building?>
+        fakeBuildingContextProvider.OutputBuildings[miner.Id] = new Dictionary<uint, Building?>
         {
             [0] = target
+        };
+        fakeBuildingContextProvider.InputBuildings[target.Id] = new Dictionary<uint, Building>
+        {
+            [0] = miner
         };
         new BuildingConnector(fakeBuildingContextProvider).ConnectBuildings(0, 0, target, miner);
     }
@@ -64,7 +68,7 @@ public class BuildingTestHelper
         uint outputIndex = 0)
     {
         var endBuilding = new EndBuilding();
-        fakeBuildingContext.Buildings[target.Id][outputIndex] = endBuilding;
+        fakeBuildingContext.OutputBuildings[target.Id][outputIndex] = endBuilding;
         new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;
@@ -73,7 +77,7 @@ public class BuildingTestHelper
     public void DisconnectEndBuildingFromTarget(FakeBuildingContextProvider fakeBuildingContext, uint outputIndex,
         InputBuilding disconnected)
     {
-        fakeBuildingContext.Buildings[target.Id][outputIndex] = null;
+        fakeBuildingContext.OutputBuildings[target.Id][outputIndex] = null;
         new BuildingConnector(fakeBuildingContext).DisconnectBuilding(outputIndex, 0, disconnected, target);
     }
 }

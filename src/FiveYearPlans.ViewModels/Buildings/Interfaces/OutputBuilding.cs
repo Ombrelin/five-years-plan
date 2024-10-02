@@ -1,6 +1,6 @@
-namespace FiveYearPlans.ViewModels;
+namespace FiveYearPlans.ViewModels.Buildings.Interfaces;
 
-public interface OutputBuilding
+public interface OutputBuilding : IBuilding
 {
     Dictionary<uint, ResourceFlow> OutPutResourceFlows { get; }
 }

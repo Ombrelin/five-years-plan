@@ -83,8 +83,11 @@ public class MinerViewModelTests
         uint outputIndex = 0)
     {
         var endBuilding = new EndBuilding();
-        fakeBuildingContext.Buildings[endBuilding.Id] = new Dictionary<uint, Building?>();
-        fakeBuildingContext.Buildings[target.Id][outputIndex] = endBuilding;
+        fakeBuildingContext.OutputBuildings[endBuilding.Id] = new Dictionary<uint, Building?>();
+        fakeBuildingContext.OutputBuildings[target.Id][outputIndex] = endBuilding;
+
+        fakeBuildingContext.InputBuildings[endBuilding.Id] = new Dictionary<uint, Building>();
+        fakeBuildingContext.InputBuildings[endBuilding.Id][0] = target;
         new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;
@@ -93,7 +96,7 @@ public class MinerViewModelTests
     private FakeBuildingContextProvider FakeBuildingContextProviderWithTarget() =>
         new()
         {
-            Buildings =
+            OutputBuildings =
             {
                 [target.Id] = new Dictionary<uint, Building?>
                 {
