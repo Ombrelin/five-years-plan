@@ -29,4 +29,15 @@
         <ProjectReference Include="..\FiveYearPlans.ViewModels\FiveYearPlans.ViewModels.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Nodes\MergerView.axaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\Nodes\MergerView.axaml.cs">
+        <DependentUpon>SplitterView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
 </Project>

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings;
+using FiveYearPlans.ViewModels.Buildings.Interfaces;
 using Microsoft.Extensions.Logging;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;
@@ -123,14 +124,23 @@ internal class DrawingAdapter : IBuildingContextProvider
             .ToList()
             .IndexOf(newConnector.End);
 
-    private static uint ComputeOutputIndex(ConnectorViewModel newConnector) =>
-        (uint)newConnector
+    private static uint ComputeOutputIndex(ConnectorViewModel newConnector)
+    {
+        var index = newConnector
             .Start
             .Parent
             .Pins
             .Where(pin => pin.Alignment is PinAlignment.Right)
             .ToList()
             .IndexOf(newConnector.Start);
+
+        if (index == -1)
+        {
+            throw new InvalidOperationException($"Ouput index for {newConnector.Start.Parent.Name} was not found");
+        }
+        
+        return (uint)index;
+    }
 
     public IReadOnlyDictionary<uint, Building?> GetOutputConnectionState(Guid id)
     {
@@ -140,14 +150,26 @@ internal class DrawingAdapter : IBuildingContextProvider
             .Pins;
         return GetOutputConnectionState(pins);
     }
+    
+    public IReadOnlyDictionary<uint, Building?> GetInputConnectionState(Guid id)=>GetInputConnectionState(Drawing
+            .Nodes
+            .First(node => (node.Content as Building).Id == id)
+            .Pins);
+
+    public IReadOnlyDictionary<uint, Building?> GetInputConnectionState(IEnumerable<IPin> pins)=>
+        pins
+            .Where(pin => pin.Alignment is PinAlignment.Left)
+            .Select((pin, index) => (Index: (uint)index, Building: GetInputBuilding(pin)))
+            .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+    
 
     private IReadOnlyDictionary<uint, Building?> GetOutputConnectionState(IEnumerable<IPin> pins) =>
         pins
             .Where(pin => pin.Alignment is PinAlignment.Right)
-            .Select((pin, index) => (Index: (uint)index, Building: GetBuilding(pin)))
+            .Select((pin, index) => (Index: (uint)index, Building: GetOutputBuilding(pin)))
             .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
 
-    private Building? GetBuilding(IPin pin)
+    private Building? GetOutputBuilding(IPin pin)
     {
         IConnector? firstOrDefault = Drawing.Connectors.FirstOrDefault(connector => connector.Start == pin);
 
@@ -157,6 +179,19 @@ internal class DrawingAdapter : IBuildingContextProvider
         }
 
         return firstOrDefault.End.Parent
+            .Content as Building;
+    }
+    
+    private Building? GetInputBuilding(IPin pin)
+    {
+        IConnector? firstOrDefault = Drawing.Connectors.FirstOrDefault(connector => connector.End == pin);
+
+        if (firstOrDefault is null)
+        {
+            return null;
+        }
+
+        return firstOrDefault.Start.Parent
             .Content as Building;
     }
 }

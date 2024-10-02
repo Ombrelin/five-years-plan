@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using FiveYearPlans.ViewModels.Buildings;
+using FiveYearPlans.ViewModels.Buildings.Interfaces;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
 using FiveYearPlans.ViewModels.Tests.Fakes;
@@ -12,21 +13,7 @@ public class MergerViewModelTests
     private readonly MergerViewModel target = new();
 
     [Fact]
-    public void RecomputeResourceFlowsFromIO_MoreThanOneOutputThrows()
-    {
-        // Given
-        target.InputResourceFlows[0] = new ResourceFlow(new Resource("Iron Ore"), 30);
-        target.InputResourceFlows[1] = new ResourceFlow(new Resource("Iron Ore"), 30);
-
-        // When
-        var act = () => target.RecomputeOutput(Substitute.For<IBuildingContextProvider>());
-
-        // Then
-        Assert.Throws<InvalidOperationException>(act);
-    }
-
-    [Fact]
-    public void Connect_NoOutputFlowConnected_OuputAndOtherInputsAtZero()
+    public void Connect_NoOutputFlowConnected_OutputAndOtherInputsAtZero()
     {
         // Given
         FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
@@ -267,15 +254,22 @@ public class MergerViewModelTests
         DisconnectMinerFromTarget(fakeBuildingContext, miner, 1);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), endBuilding.RecomputedResourceFlow);
     }
 
 
     private FakeBuildingContextProvider FakeBuildingContextProviderWithTarget() =>
         new()
         {
-            Buildings =
+            OutputBuildings =
+            {
+                [target.Id] = new Dictionary<uint, Building?>
+                {
+                    [0] = null
+                }
+            },
+            InputBuildings =
             {
                 [target.Id] = new Dictionary<uint, Building?>
                 {
@@ -289,10 +283,11 @@ public class MergerViewModelTests
     private MinerViewModel ConnectMinerToTarget(FakeBuildingContextProvider fakeBuildingContextProvider, uint inputNumber)
     {
         MinerViewModel miner = BuildIronOreMiner();
-        fakeBuildingContextProvider.Buildings[miner.Id] = new Dictionary<uint, Building?>
+        fakeBuildingContextProvider.OutputBuildings[miner.Id] = new Dictionary<uint, Building?>
         {
-            [inputNumber] = target
+            [0] = target
         };
+        fakeBuildingContextProvider.InputBuildings[target.Id][inputNumber] = miner;
         new BuildingConnector(fakeBuildingContextProvider).ConnectBuildings(0, inputNumber, target, miner);
 
         return miner;
@@ -323,8 +318,12 @@ public class MergerViewModelTests
     {
         const uint outputIndex = 0;
         var endBuilding = new EndBuilding();
-        fakeBuildingContext.Buildings[endBuilding.Id] = new Dictionary<uint, Building?>();
-        fakeBuildingContext.Buildings[target.Id][outputIndex] = endBuilding;
+        fakeBuildingContext.OutputBuildings[endBuilding.Id] = new Dictionary<uint, Building?>();
+        fakeBuildingContext.OutputBuildings[target.Id][outputIndex] = endBuilding;
+        
+        fakeBuildingContext.InputBuildings[endBuilding.Id] = new Dictionary<uint, Building?>();
+        fakeBuildingContext.InputBuildings[endBuilding.Id][0] = target;
+        
         new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;
@@ -334,7 +333,8 @@ public class MergerViewModelTests
         OutputBuilding disconnected, uint inputNumber)
     {
         const uint outputIndex = 0;
-        fakeBuildingContext.Buildings[target.Id][outputIndex] = null;
+        fakeBuildingContext.OutputBuildings[disconnected.Id][outputIndex] = null;
+        fakeBuildingContext.InputBuildings[target.Id][inputNumber] = null;
         new BuildingConnector(fakeBuildingContext).DisconnectBuilding(outputIndex, inputNumber, target, disconnected);
     }
 }

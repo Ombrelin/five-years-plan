@@ -3,7 +3,8 @@ using FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
-public class MergerViewModel : DynamicFlowBuilding
+[ObservableObject]
+public partial class MergerViewModel : DynamicFlowBuilding
 {
     [ObservableProperty] private ResourceFlow? outPutResourceFlow;
     [ObservableProperty] private ResourceFlow? inputResourceFlow1;
@@ -15,27 +16,64 @@ public class MergerViewModel : DynamicFlowBuilding
         [0] = null
     };
 
-    
-    
-    public override Dictionary<uint, ResourceFlow> OutPutResourceFlows { get; }
-    protected override void ComputeOutputFromInput(KeyValuePair<uint, Building>[] connectedOutputs, IReadOnlyDictionary<uint, Building?> outputConnectionState)
+    private readonly Dictionary<uint, ResourceFlow?> inPutResourceFlows = new()
     {
-        throw new NotImplementedException();
+        [0] = null,
+        [1] = null,
+        [2] = null
+    };
+
+
+    public override Dictionary<uint, ResourceFlow> OutPutResourceFlows => outPutResourceFlows;
+    public override Dictionary<uint, ResourceFlow> InputResourceFlows => inPutResourceFlows;
+
+    protected override void ComputeOutputFromInput(KeyValuePair<uint, Building>[] connectedOutputs,
+        IReadOnlyDictionary<uint, Building?> outputConnectionState)
+    {
+        InputResourceFlow1 = InputResourceFlows[0];
+        InputResourceFlow2 = InputResourceFlows[1];
+        InputResourceFlow3 = InputResourceFlows[2];
+        
+        var resourceFlows = new[] { InputResourceFlow1, InputResourceFlow2, InputResourceFlow3 };
+        var resource = resourceFlows.FirstOrDefault(resourceFlow => resourceFlow is not null && resourceFlow.Resource.Name != "Nothing")?.Resource;
+        if (resource is null)
+        {
+            OutPutResourceFlow = new ResourceFlow(new Resource("Nothing"), 0);
+            return;
+        }
+        
+        if (resourceFlows.Any(resourceFlow =>
+                resourceFlow is not null && resourceFlow.Resource.Name != "Nothing" && resourceFlow.Resource != resource))
+        {
+            throw new InvalidOperationException("Different resources are not supported yet.");
+        }
+
+        var outputCount = (InputResourceFlow1?.Quantity ?? 0) + (InputResourceFlow2?.Quantity ?? 0) +
+            (InputResourceFlow3?.Quantity ?? 0);
+
+        if (!connectedOutputs.Any())
+        {
+            OutPutResourceFlow = new ResourceFlow(resource, 0);
+        }
+        else
+        {
+            OutPutResourceFlow = new ResourceFlow(resource, outputCount);
+        }
     }
 
     protected override void UpdateFlows()
     {
-        throw new NotImplementedException();
+        outPutResourceFlows = new Dictionary<uint, ResourceFlow?>()
+        {
+            [0] = OutPutResourceFlow,
+        };
     }
 
     protected override void EmptyOutput()
     {
-        throw new NotImplementedException();
+        OutPutResourceFlow = null;
     }
 
-    public override Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();
-    protected override bool FlowsUpdateNeeded()
-    {
-        throw new NotImplementedException();
-    }
+
+    protected override bool FlowsUpdateNeeded() => OutPutResourceFlows[0] != OutPutResourceFlow;
 }
