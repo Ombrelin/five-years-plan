@@ -85,6 +85,9 @@ public class MinerViewModelTests
         var endBuilding = new EndBuilding();
         fakeBuildingContext.OutputBuildings[endBuilding.Id] = new Dictionary<uint, Building?>();
         fakeBuildingContext.OutputBuildings[target.Id][outputIndex] = endBuilding;
+
+        fakeBuildingContext.InputBuildings[endBuilding.Id] = new Dictionary<uint, Building>();
+        fakeBuildingContext.InputBuildings[endBuilding.Id][0] = target;
         new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;

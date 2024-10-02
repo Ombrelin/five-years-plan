@@ -37,6 +37,10 @@ public class BuildingTestHelper
         {
             [0] = target
         };
+        fakeBuildingContextProvider.InputBuildings[target.Id] = new Dictionary<uint, Building>
+        {
+            [0] = miner
+        };
         new BuildingConnector(fakeBuildingContextProvider).ConnectBuildings(0, 0, target, miner);
     }
 
