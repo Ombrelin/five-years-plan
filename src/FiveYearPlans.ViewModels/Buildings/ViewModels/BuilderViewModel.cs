@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
@@ -31,7 +32,7 @@ public partial class BuilderViewModel : DynamicFlowBuilding, OutputBuilding
             var outputQuantity = InputResourceFlow?.Quantity ?? 0;
 
             OutPutResourceFlow =
-                new ResourceFlow(InputResourceFlow?.Resource ?? new Resource("Nothing"),
+                new ResourceFlow(InputResourceFlow?.Resource ?? Resource.Nothing,
                     outputConnectionState[0] is not null ? outputQuantity : 0);
         }
     }

@@ -1,4 +1,5 @@
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
+using FiveYearPlans.ViewModels.Resources;
 using FiveYearPlans.ViewModels.Tests.Fakes;
 
 namespace FiveYearPlans.ViewModels.Tests;
@@ -24,9 +25,9 @@ public class BuilderViewModelsTests
         helper.ConnectMinerToTarget(fakeBuildingContext);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
 
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 0), target.OutPutResourceFlow);
     }
 }

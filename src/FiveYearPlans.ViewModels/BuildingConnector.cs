@@ -1,5 +1,6 @@
 using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels;
 
@@ -64,7 +65,7 @@ public class BuildingConnector
     public void DisconnectBuilding(uint outputIndex, uint inputIndex, InputBuilding inputBuilding,
         OutputBuilding outputBuilding)
     {
-        inputBuilding.InputResourceFlows[inputIndex] = new ResourceFlow(new Resource("Nothing"), 0);
+        inputBuilding.InputResourceFlows[inputIndex] = new ResourceFlow(Resource.Nothing, 0);
 
         if (outputBuilding is DynamicFlowBuilding otherDynamicFlowsOutputBuilding)
         {

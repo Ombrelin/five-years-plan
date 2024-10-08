@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 

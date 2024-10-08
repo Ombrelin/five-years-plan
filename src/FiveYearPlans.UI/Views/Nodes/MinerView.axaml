@@ -38,7 +38,7 @@
                 <Label Classes="node"
                        Content="{CompiledBinding OutPutResourceFlow.Quantity}" />
                 <Label Classes="node"
-                       Content="{CompiledBinding OutPutResourceFlow.Resource.Name}" />
+                       Content="{CompiledBinding OutPutResourceFlow.Resource}" />
             </StackPanel>
         </StackPanel>
     </Panel>

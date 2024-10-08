@@ -3,6 +3,7 @@ using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 using FiveYearPlans.ViewModels.Tests.Fakes;
 
 namespace FiveYearPlans.ViewModels.Tests;
@@ -56,7 +57,7 @@ public class BuildingTestHelper
                     new[]
                     {
                         new ResourceFlow(
-                            new Resource("Iron Ore"),
+                            Resource.IronOre,
                             30
                         )
                     })

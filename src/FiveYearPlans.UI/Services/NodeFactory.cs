@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;
 
@@ -32,7 +33,7 @@ public class NodeFactory : INodeFactory
                         new[]
                         {
                             new ResourceFlow(
-                                new Resource("Iron Ore"),
+                                Resource.IronOre,
                                 30
                             )
                         }),
@@ -42,7 +43,7 @@ public class NodeFactory : INodeFactory
                         new[]
                         {
                             new ResourceFlow(
-                                new Resource("Limestone"),
+                                Resource.Limestone,
                                 30
                             )
                         }),
@@ -52,7 +53,7 @@ public class NodeFactory : INodeFactory
                         new[]
                         {
                             new ResourceFlow(
-                                new Resource("Copper Ore"),
+                                Resource.CopperOre,
                                 30
                             )
                         })

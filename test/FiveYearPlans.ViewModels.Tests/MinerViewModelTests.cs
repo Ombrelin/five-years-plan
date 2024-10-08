@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 using FiveYearPlans.ViewModels.Tests.Fakes;
 
 namespace FiveYearPlans.ViewModels.Tests;
@@ -17,7 +18,7 @@ public class MinerViewModelTests
                 Array.Empty<ResourceFlow>(),
                 new[]
                 {
-                    new ResourceFlow(new Resource("Limestone"), 30)
+                    new ResourceFlow(Resource.Limestone, 30)
                 }
             )
         }
@@ -29,7 +30,7 @@ public class MinerViewModelTests
         // Then
         Assert.NotNull(target.Recipe);
         Assert.Equal(30, target.OutPutResourceFlow.Quantity);
-        Assert.Equal(new Resource("Limestone"), target.OutPutResourceFlow.Resource);
+        Assert.Equal(Resource.Limestone, target.OutPutResourceFlow.Resource);
         Assert.Equal(target.OutPutResourceFlow, Assert.Single(target.OutPutResourceFlows).Value);
         Assert.Equal(0u, Assert.Single(target.OutPutResourceFlows).Key);
     }
@@ -38,7 +39,7 @@ public class MinerViewModelTests
     public void Miner_OutputsResourceFromRecipe()
     {
         // Arrange
-        var resource = new Resource("Iron Ore");
+        var resource = Resource.IronOre;
         const int quantity = 30;
         var recipe = new Recipe(
             "Iron Ore",
@@ -60,7 +61,7 @@ public class MinerViewModelTests
     public void Miner_UpdateRecipe_UpdatesOutput()
     {
         // Arrange
-        var resource = new Resource("Iron Ore");
+        var resource = Resource.IronOre;
         const int quantity = 30;
         var resourceFlow = new ResourceFlow(resource, quantity);
         var recipe = new Recipe(

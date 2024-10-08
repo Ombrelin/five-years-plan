@@ -1,4 +1,6 @@
-namespace FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Resources;
+
+namespace FiveYearPlans.ViewModels;
 
 public interface OutputBuilding : IBuilding
 {

@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
@@ -55,13 +56,13 @@ public partial class SplitterViewModel : DynamicFlowBuilding
             var outputQuantity = (InputResourceFlow?.Quantity ?? 0) / connectedOutputs.Length;
 
             OutPutResourceFlow1 =
-                new ResourceFlow(InputResourceFlow?.Resource ?? new Resource("Nothing"),
+                new ResourceFlow(InputResourceFlow?.Resource ?? Resource.Nothing,
                     outputConnectionState[0] is not null ? outputQuantity : 0);
             OutPutResourceFlow2 =
-                new ResourceFlow(InputResourceFlow?.Resource ?? new Resource("Nothing"),
+                new ResourceFlow(InputResourceFlow?.Resource ?? Resource.Nothing,
                     outputConnectionState[1] is not null ? outputQuantity : 0);
             OutPutResourceFlow3 =
-                new ResourceFlow(InputResourceFlow?.Resource ?? new Resource("Nothing"),
+                new ResourceFlow(InputResourceFlow?.Resource ?? Resource.Nothing,
                     outputConnectionState[2] is not null ? outputQuantity : 0);
         }
     }
