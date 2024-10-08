@@ -24,41 +24,6 @@ public class NodeFactory : INodeFactory
             Height = height,
             Pins = new ObservableCollection<IPin>(),
             Content = new MinerViewModel()
-            {
-                PossibleRecipes = new ObservableCollection<Recipe>
-                {
-                    new(
-                        "Iron Ore",
-                        Array.Empty<ResourceFlow>(),
-                        new[]
-                        {
-                            new ResourceFlow(
-                                Resource.IronOre,
-                                30
-                            )
-                        }),
-                    new(
-                        "Limestone",
-                        Array.Empty<ResourceFlow>(),
-                        new[]
-                        {
-                            new ResourceFlow(
-                                Resource.Limestone,
-                                30
-                            )
-                        }),
-                    new(
-                        "Copper Ore",
-                        Array.Empty<ResourceFlow>(),
-                        new[]
-                        {
-                            new ResourceFlow(
-                                Resource.CopperOre,
-                                30
-                            )
-                        })
-                }
-            }
         };
 
         node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");

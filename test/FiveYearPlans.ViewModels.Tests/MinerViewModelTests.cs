@@ -9,50 +9,53 @@ namespace FiveYearPlans.ViewModels.Tests;
 
 public class MinerViewModelTests
 {
-    private readonly MinerViewModel target = new()
-    {
-        PossibleRecipes = new ObservableCollection<Recipe>
-        {
-            new(
-                "Limestone",
-                Array.Empty<ResourceFlow>(),
-                new[]
-                {
-                    new ResourceFlow(Resource.Limestone, 30)
-                }
-            )
-        }
-    };
+    private readonly MinerViewModel target = new();
 
     [Fact]
     public void Miner_Constructor_SetsDefaultRecipe()
     {
+        // When
+        target.Resource = Resource.Limestone;
+        
         // Then
-        Assert.NotNull(target.Recipe);
         Assert.Equal(30, target.OutPutResourceFlow.Quantity);
+        Assert.Equal(ResourceDepositPurity.Impure, target.ResourceDepositPurity);
+        Assert.Equal(MinerViewModel.MinerTier.Mk1, target.Tier);
         Assert.Equal(Resource.Limestone, target.OutPutResourceFlow.Resource);
         Assert.Equal(target.OutPutResourceFlow, Assert.Single(target.OutPutResourceFlows).Value);
         Assert.Equal(0u, Assert.Single(target.OutPutResourceFlows).Key);
     }
-
+    
+    [Theory]
+    [InlineData(ResourceDepositPurity.Impure, MinerViewModel.MinerTier.Mk1, 30)]
+    [InlineData(ResourceDepositPurity.Normal, MinerViewModel.MinerTier.Mk1, 60)]
+    [InlineData(ResourceDepositPurity.Pure, MinerViewModel.MinerTier.Mk1, 120)]
+    [InlineData(ResourceDepositPurity.Impure, MinerViewModel.MinerTier.Mk2, 60)]
+    [InlineData(ResourceDepositPurity.Normal, MinerViewModel.MinerTier.Mk2, 120)]
+    [InlineData(ResourceDepositPurity.Pure, MinerViewModel.MinerTier.Mk2, 240)]
+    [InlineData(ResourceDepositPurity.Impure, MinerViewModel.MinerTier.Mk3, 120)]
+    [InlineData(ResourceDepositPurity.Normal, MinerViewModel.MinerTier.Mk3, 240)]
+    [InlineData(ResourceDepositPurity.Pure, MinerViewModel.MinerTier.Mk3, 480)]
+    public void Miner_OutCalculation_IsCorrect(ResourceDepositPurity resourceDepositPurity, MinerViewModel.MinerTier minerTier, decimal expectedOutput)
+    {
+        // When
+        target.Resource = Resource.Limestone;
+        target.ResourceDepositPurity = resourceDepositPurity;
+        target.Tier = minerTier;
+        
+        // Then
+        Assert.Equal(expectedOutput, target.OutPutResourceFlow.Quantity);
+    }
+    
     [Fact]
     public void Miner_OutputsResourceFromRecipe()
     {
-        // Arrange
-        var resource = Resource.IronOre;
-        const int quantity = 30;
-        var recipe = new Recipe(
-            "Iron Ore",
-            Array.Empty<ResourceFlow>(),
-            new[] { new ResourceFlow(resource, quantity) }
-        );
-
         // Act
-        target.Recipe = recipe;
+        target.Resource = Resource.IronOre;
 
         // Then
-        Assert.Equal(quantity, target.OutPutResourceFlow.Quantity);
-        Assert.Equal(resource, target.OutPutResourceFlow.Resource);
+        Assert.Equal(30, target.OutPutResourceFlow.Quantity);
+        Assert.Equal(Resource.IronOre, target.OutPutResourceFlow.Resource);
         Assert.Equal(target.OutPutResourceFlow, Assert.Single(target.OutPutResourceFlows).Value);
         Assert.Equal(0u, Assert.Single(target.OutPutResourceFlows).Key);
     }
@@ -61,23 +64,15 @@ public class MinerViewModelTests
     public void Miner_UpdateRecipe_UpdatesOutput()
     {
         // Arrange
-        var resource = Resource.IronOre;
-        const int quantity = 30;
-        var resourceFlow = new ResourceFlow(resource, quantity);
-        var recipe = new Recipe(
-            "Iron Ore",
-            Array.Empty<ResourceFlow>(),
-            new[] { resourceFlow }
-        );
-
         FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
 
         // Act
-        target.Recipe = recipe;
+        target.Resource = Resource.IronOre;
 
         // Then
-        Assert.Equal(resourceFlow, endBuilding.RecomputedResourceFlow);
+        Assert.Equal(Resource.IronOre, endBuilding.RecomputedResourceFlow.Resource);
+        Assert.Equal(30, endBuilding.RecomputedResourceFlow.Quantity);
     }
 
     private EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext,

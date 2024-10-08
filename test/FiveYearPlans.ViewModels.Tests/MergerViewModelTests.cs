@@ -294,25 +294,14 @@ public class MergerViewModelTests
         return miner;
     }
 
-    public MinerViewModel BuildIronOreMiner()
-    {
-        return new MinerViewModel()
+    public MinerViewModel BuildIronOreMiner() =>
+        new()
         {
-            PossibleRecipes = new ObservableCollection<Recipe>
-            {
-                new Recipe(
-                    "Iron Ore",
-                    Array.Empty<ResourceFlow>(),
-                    new[]
-                    {
-                        new ResourceFlow(
-                            Resource.IronOre,
-                            30
-                        )
-                    })
-            }
+            Resource = Resource.IronOre,
+            ResourceDepositPurity = ResourceDepositPurity.Impure,
+            Tier = MinerViewModel.MinerTier.Mk1
         };
-    }
+
 
 
     private EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext)
