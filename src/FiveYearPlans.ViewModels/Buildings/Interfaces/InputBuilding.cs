@@ -1,6 +1,6 @@
 using FiveYearPlans.ViewModels.Resources;
 
-namespace FiveYearPlans.ViewModels;
+namespace FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 public interface InputBuilding : IBuilding
 {
