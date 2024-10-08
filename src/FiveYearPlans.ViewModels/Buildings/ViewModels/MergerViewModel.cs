@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 
@@ -34,31 +35,38 @@ public partial class MergerViewModel : DynamicFlowBuilding
         InputResourceFlow2 = InputResourceFlows[1];
         InputResourceFlow3 = InputResourceFlows[2];
         
-        var resourceFlows = new[] { InputResourceFlow1, InputResourceFlow2, InputResourceFlow3 };
-        var resource = resourceFlows.FirstOrDefault(resourceFlow => resourceFlow is not null && resourceFlow.Resource.Name != "Nothing")?.Resource;
-        if (resource is null)
-        {
-            OutPutResourceFlow = new ResourceFlow(new Resource("Nothing"), 0);
-            return;
-        }
-        
-        if (resourceFlows.Any(resourceFlow =>
-                resourceFlow is not null && resourceFlow.Resource.Name != "Nothing" && resourceFlow.Resource != resource))
-        {
-            throw new InvalidOperationException("Different resources are not supported yet.");
-        }
+        var resource = ExtractInputResource();
 
-        var outputCount = (InputResourceFlow1?.Quantity ?? 0) + (InputResourceFlow2?.Quantity ?? 0) +
-            (InputResourceFlow3?.Quantity ?? 0);
+        var outputCount = InputResourceFlows
+            .Values
+            .Where(resourceFlow => resourceFlow is not null)
+            .Sum(resourceFlow => resourceFlow.Quantity);
 
-        if (!connectedOutputs.Any())
+        if (!connectedOutputs.Any() || outputCount == 0)
         {
-            OutPutResourceFlow = new ResourceFlow(resource, 0);
+            OutPutResourceFlow = new ResourceFlow(Resource.Nothing, 0);
         }
         else
         {
             OutPutResourceFlow = new ResourceFlow(resource, outputCount);
         }
+    }
+
+    private Resource ExtractInputResource()
+    {
+        var resources = InputResourceFlows.Values
+            .Where(resourceFlow => resourceFlow is not null)
+            .Select(resourceFlow => resourceFlow.Resource)
+            .Distinct()
+            .ToList();
+
+        return resources switch
+        {
+            [var resource, Resource.Nothing] => resource,
+            [Resource.Nothing, var resource] => resource,
+            [var resource] => resource,
+            _ => throw new InvalidOperationException("Different resources not supported yet")
+        };
     }
 
     protected override void UpdateFlows()

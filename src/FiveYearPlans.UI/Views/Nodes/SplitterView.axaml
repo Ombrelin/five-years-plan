@@ -30,7 +30,7 @@
                         <Label Classes="node"
                                Content="{CompiledBinding InputResourceFlow.Quantity}" />
                         <Label Classes="node"
-                               Content="{CompiledBinding InputResourceFlow.Resource.Name}" />
+                               Content="{CompiledBinding InputResourceFlow.Resource}" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel>
@@ -39,15 +39,15 @@
                         <Label Classes="node"
                                Content="{CompiledBinding OutPutResourceFlow1.Quantity}" />
                         <Label Classes="node"
-                               Content="{CompiledBinding OutPutResourceFlow1.Resource.Name}" />
+                               Content="{CompiledBinding OutPutResourceFlow1.Resource}" />
                         <Label Classes="node"
                                Content="{CompiledBinding OutPutResourceFlow2.Quantity}" />
                         <Label Classes="node"
-                               Content="{CompiledBinding OutPutResourceFlow2.Resource.Name}" />
+                               Content="{CompiledBinding OutPutResourceFlow2.Resource}" />
                         <Label Classes="node"
                                Content="{CompiledBinding OutPutResourceFlow3.Quantity}" />
                         <Label Classes="node"
-                               Content="{CompiledBinding OutPutResourceFlow3.Resource.Name}" />
+                               Content="{CompiledBinding OutPutResourceFlow3.Resource}" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

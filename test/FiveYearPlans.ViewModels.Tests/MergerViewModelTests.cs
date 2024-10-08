@@ -3,6 +3,7 @@ using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 using FiveYearPlans.ViewModels.Tests.Fakes;
 using NSubstitute;
 
@@ -22,11 +23,11 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 0);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
         Assert.Null(target.InputResourceFlows[1]);
         Assert.Null(target.InputResourceFlows[2]);
 
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
     }
 
     [Fact]
@@ -40,12 +41,12 @@ public class MergerViewModelTests
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.InputResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
         Assert.Null(target.InputResourceFlows[1]);
         Assert.Null(target.InputResourceFlows[2]);
         
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), endBuilding.RecomputedResourceFlow);
     }
 
 
@@ -63,8 +64,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 1);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), endBuilding.RecomputedResourceFlow);
     }
 
 
@@ -81,8 +82,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 2);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -98,8 +99,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 2);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), endBuilding.RecomputedResourceFlow);
     }
 
 
@@ -116,8 +117,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 2);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -133,8 +134,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 2);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -150,8 +151,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 0);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -167,8 +168,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 1);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -184,8 +185,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 1);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), endBuilding.RecomputedResourceFlow);
     }
 
 
@@ -202,8 +203,8 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 0);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 90), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 90), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -220,8 +221,8 @@ public class MergerViewModelTests
         DisconnectMinerFromTarget(fakeBuildingContext, miner, 0);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 60), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 60), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -238,8 +239,8 @@ public class MergerViewModelTests
         DisconnectMinerFromTarget(fakeBuildingContext, miner, 2);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Iron Ore"), 30), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), endBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -254,8 +255,8 @@ public class MergerViewModelTests
         DisconnectMinerFromTarget(fakeBuildingContext, miner, 1);
 
         // Then
-        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(new Resource("Nothing"), 0), endBuilding.RecomputedResourceFlow);
+        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), endBuilding.RecomputedResourceFlow);
     }
 
 
@@ -293,25 +294,14 @@ public class MergerViewModelTests
         return miner;
     }
 
-    public MinerViewModel BuildIronOreMiner()
-    {
-        return new MinerViewModel()
+    public MinerViewModel BuildIronOreMiner() =>
+        new()
         {
-            PossibleRecipes = new ObservableCollection<Recipe>
-            {
-                new Recipe(
-                    "Iron Ore",
-                    Array.Empty<ResourceFlow>(),
-                    new[]
-                    {
-                        new ResourceFlow(
-                            new Resource("Iron Ore"),
-                            30
-                        )
-                    })
-            }
+            Resource = Resource.IronOre,
+            ResourceDepositPurity = ResourceDepositPurity.Impure,
+            Tier = MinerViewModel.MinerTier.Mk1
         };
-    }
+
 
 
     private EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext)

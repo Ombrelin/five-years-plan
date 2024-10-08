@@ -1,3 +1,5 @@
+using FiveYearPlans.ViewModels.Resources;
+
 namespace FiveYearPlans.ViewModels.Buildings.Interfaces;
 
 public abstract class DynamicFlowBuilding : Building, InputBuilding, OutputBuilding

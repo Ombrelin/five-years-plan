@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;
 
@@ -23,41 +24,6 @@ public class NodeFactory : INodeFactory
             Height = height,
             Pins = new ObservableCollection<IPin>(),
             Content = new MinerViewModel()
-            {
-                PossibleRecipes = new ObservableCollection<Recipe>
-                {
-                    new(
-                        "Iron Ore",
-                        Array.Empty<ResourceFlow>(),
-                        new[]
-                        {
-                            new ResourceFlow(
-                                new Resource("Iron Ore"),
-                                30
-                            )
-                        }),
-                    new(
-                        "Limestone",
-                        Array.Empty<ResourceFlow>(),
-                        new[]
-                        {
-                            new ResourceFlow(
-                                new Resource("Limestone"),
-                                30
-                            )
-                        }),
-                    new(
-                        "Copper Ore",
-                        Array.Empty<ResourceFlow>(),
-                        new[]
-                        {
-                            new ResourceFlow(
-                                new Resource("Copper Ore"),
-                                30
-                            )
-                        })
-                }
-            }
         };
 
         node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");

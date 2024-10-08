@@ -3,6 +3,7 @@ using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.Interfaces;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
+using FiveYearPlans.ViewModels.Resources;
 using FiveYearPlans.ViewModels.Tests.Fakes;
 
 namespace FiveYearPlans.ViewModels.Tests;
@@ -44,25 +45,13 @@ public class BuildingTestHelper
         new BuildingConnector(fakeBuildingContextProvider).ConnectBuildings(0, 0, target, miner);
     }
 
-    public MinerViewModel BuildIronOreMiner()
-    {
-        return new MinerViewModel()
+    public MinerViewModel BuildIronOreMiner() =>
+        new()
         {
-            PossibleRecipes = new ObservableCollection<Recipe>
-            {
-                new Recipe(
-                    "Iron Ore",
-                    Array.Empty<ResourceFlow>(),
-                    new[]
-                    {
-                        new ResourceFlow(
-                            new Resource("Iron Ore"),
-                            30
-                        )
-                    })
-            }
+            Resource = Resource.IronOre,
+            ResourceDepositPurity = ResourceDepositPurity.Impure,
+            Tier = MinerViewModel.MinerTier.Mk1
         };
-    }
 
     public EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext,
         uint outputIndex = 0)

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels1="clr-namespace:FiveYearPlans.ViewModels.Buildings.ViewModels;assembly=FiveYearPlans.ViewModels"
              xmlns:recipes="clr-namespace:FiveYearPlans.ViewModels.Recipes;assembly=FiveYearPlans.ViewModels"
+             xmlns:resources="clr-namespace:FiveYearPlans.ViewModels.Resources;assembly=FiveYearPlans.ViewModels"
              mc:Ignorable="d" d:DesignWidth="60" d:DesignHeight="60"
              x:Class="NodeEditorDemo.Views.Nodes.MinerView"
              x:CompileBindings="True" x:DataType="viewModels1:MinerViewModel"
@@ -14,18 +15,40 @@
     <Panel>
         <Panel.ContextFlyout>
             <Flyout>
-                <DockPanel Width="200">
-                    <Label Content="Recipe :" DockPanel.Dock="Top" />
-                    <ComboBox x:Name="RecipeCombobox" DockPanel.Dock="Top"
-                              ItemsSource="{CompiledBinding PossibleRecipes}"
-                              SelectedItem="{CompiledBinding Recipe}">
+                <StackPanel Orientation="Vertical" Width="200">
+                    <Label Content="Resource :"/>
+                    <ComboBox
+                              ItemsSource="{CompiledBinding PossibleResources}"
+                              SelectedItem="{CompiledBinding Resource}">
                         <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="recipes:Recipe">
-                                <Label Content="{CompiledBinding Name}" />
+                            <DataTemplate x:DataType="resources:Resource">
+                                <Label Content="{CompiledBinding}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                </DockPanel>
+                    
+                    <Label Content="Deposit Purity :" />
+                    <ComboBox
+                              ItemsSource="{CompiledBinding PossibleResourceDepositPurity}"
+                              SelectedItem="{CompiledBinding ResourceDepositPurity}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="resources:ResourceDepositPurity">
+                                <Label Content="{CompiledBinding}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    
+                    <Label Content="Miner Tier :" />
+                    <ComboBox
+                        ItemsSource="{CompiledBinding PossibleMinerTiers}"
+                        SelectedItem="{CompiledBinding Tier}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{CompiledBinding}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
             </Flyout>
         </Panel.ContextFlyout>
 
@@ -38,7 +61,7 @@
                 <Label Classes="node"
                        Content="{CompiledBinding OutPutResourceFlow.Quantity}" />
                 <Label Classes="node"
-                       Content="{CompiledBinding OutPutResourceFlow.Resource.Name}" />
+                       Content="{CompiledBinding OutPutResourceFlow.Resource}" />
             </StackPanel>
         </StackPanel>
     </Panel>
