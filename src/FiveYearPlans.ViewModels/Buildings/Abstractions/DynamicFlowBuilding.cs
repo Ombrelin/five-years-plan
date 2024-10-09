@@ -1,6 +1,6 @@
 using FiveYearPlans.ViewModels.Resources;
 
-namespace FiveYearPlans.ViewModels.Buildings.Interfaces;
+namespace FiveYearPlans.ViewModels.Buildings.Abstractions;
 
 public abstract class DynamicFlowBuilding : Building, InputBuilding, OutputBuilding
 {

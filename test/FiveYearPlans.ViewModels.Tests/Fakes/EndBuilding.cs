@@ -1,5 +1,5 @@
 using FiveYearPlans.ViewModels.Buildings;
-using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Buildings.Abstractions;
 using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels.Tests.Fakes;

@@ -2,9 +2,9 @@
 
 namespace NodeEditorDemo.Views.Nodes;
 
-public partial class BuilderView : UserControl
+public partial class SmelterView : UserControl
 {
-    public BuilderView()
+    public SmelterView()
     {
         InitializeComponent();
     }

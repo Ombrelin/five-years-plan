@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings;
-using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Buildings.Abstractions;
 using Microsoft.Extensions.Logging;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;

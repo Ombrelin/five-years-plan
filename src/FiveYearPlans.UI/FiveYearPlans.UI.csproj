@@ -38,6 +38,10 @@
         <DependentUpon>SplitterView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Nodes\SmelterView.axaml.cs">
+        <DependentUpon>BuilderView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

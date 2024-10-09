@@ -1,5 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Buildings.Abstractions;
 using FiveYearPlans.ViewModels.Resources;
 
 namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
