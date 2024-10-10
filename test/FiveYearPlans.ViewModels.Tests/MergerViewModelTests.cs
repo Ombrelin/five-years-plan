@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using FiveYearPlans.ViewModels.Buildings;
-using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Buildings.Abstractions;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
 using FiveYearPlans.ViewModels.Resources;

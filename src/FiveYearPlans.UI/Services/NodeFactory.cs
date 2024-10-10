@@ -31,8 +31,8 @@ public class NodeFactory : INodeFactory
         return node;
     }
 
-    internal static INode CreateBuilder(double x, double y, double width = 270, double height = 90, double pinSize = 10,
-        string name = "BUILDER")
+    internal static INode CreateConstructor(double x, double y, double width = 270, double height = 90, double pinSize = 10,
+        string name = "CONSTRUCTOR")
     {
         var node = new NodeViewModel
         {
@@ -42,7 +42,27 @@ public class NodeFactory : INodeFactory
             Width = width,
             Height = height,
             Pins = new ObservableCollection<IPin>(),
-            Content = new BuilderViewModel()
+            Content = new ConstructorViewModel()
+        };
+
+        node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
+        node.AddPin(0, height / 2, pinSize, pinSize, PinAlignment.Left, $"L-{Guid.NewGuid()}");
+
+        return node;
+    }
+    
+    private static INode CreateSmelter(double x, double y, double width = 270, double height = 90, double pinSize = 10,
+        string name = "SMELTER")
+    {
+        var node = new NodeViewModel
+        {
+            Name = name,
+            X = x,
+            Y = y,
+            Width = width,
+            Height = height,
+            Pins = new ObservableCollection<IPin>(),
+            Content = new SmelterViewModel()
         };
 
         node.AddPin(width, height / 2, pinSize, pinSize, PinAlignment.Right, $"R-{Guid.NewGuid()}");
@@ -127,9 +147,15 @@ public class NodeFactory : INodeFactory
         {
             new NodeTemplateViewModel
             {
-                Title = "Builder",
-                Template = CreateBuilder(0, 0),
-                Preview = CreateBuilder(0, 0)
+                Title = "Constructor",
+                Template = CreateConstructor(0, 0),
+                Preview = CreateConstructor(0, 0)
+            },
+            new NodeTemplateViewModel
+            {
+                Title = "Smelter",
+                Template = CreateSmelter(0, 0),
+                Preview = CreateSmelter(0, 0)
             },
             new NodeTemplateViewModel
             {
@@ -151,4 +177,6 @@ public class NodeFactory : INodeFactory
             }
         };
     }
+
+  
 }

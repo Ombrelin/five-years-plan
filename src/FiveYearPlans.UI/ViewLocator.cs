@@ -23,7 +23,8 @@ public class ViewLocator : IDataTemplate
         {
             return data?.GetType().FullName.Split(".").Last() switch
             {
-                nameof(BuilderViewModel) => new BuilderView(),
+                nameof(ConstructorViewModel) => new ConstructorView(),
+                nameof(SmelterViewModel) => new SmelterView(),
                 nameof(SplitterViewModel) => new SplitterView(),
                 nameof(MergerViewModel) => new MergerView(),
                 nameof(MinerViewModel) => new MinerView(),

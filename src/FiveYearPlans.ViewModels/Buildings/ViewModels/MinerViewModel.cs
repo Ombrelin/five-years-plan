@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
-using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Buildings.Abstractions;
 using FiveYearPlans.ViewModels.Recipes;
 using FiveYearPlans.ViewModels.Resources;
 

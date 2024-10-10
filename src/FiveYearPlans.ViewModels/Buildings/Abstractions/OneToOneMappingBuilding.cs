@@ -1,14 +1,18 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using FiveYearPlans.ViewModels.Buildings.Interfaces;
+using FiveYearPlans.ViewModels.Recipes;
 using FiveYearPlans.ViewModels.Resources;
 
-namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
+namespace FiveYearPlans.ViewModels.Buildings.Abstractions;
 
 [ObservableObject]
-public partial class BuilderViewModel : DynamicFlowBuilding, OutputBuilding
+public abstract partial class OneToOneMappingBuilding : DynamicFlowBuilding
 {
+ 
+    public abstract List<Recipe> PossibleRecipes { get; }
+ 
     [ObservableProperty] private ResourceFlow? outPutResourceFlow;
     [ObservableProperty] private ResourceFlow? inputResourceFlow;
+    [ObservableProperty] private Recipe? recipe;
 
     private Dictionary<uint, ResourceFlow?> outPutResourceFlows = new()
     {
@@ -23,16 +27,21 @@ public partial class BuilderViewModel : DynamicFlowBuilding, OutputBuilding
     {
         InputResourceFlow = InputResourceFlows.Single().Value;
 
-        if (!connectedOutputs.Any())
+        if (connectedOutputs.Length == 0 || InputResourceFlow is null)
         {
-            OutPutResourceFlow = InputResourceFlow with { Quantity = 0 };
+            OutPutResourceFlow =  new ResourceFlow(Resource.Nothing, 0);
         }
         else
         {
-            var outputQuantity = InputResourceFlow?.Quantity ?? 0;
+            var inputRatio = InputResourceFlow.Quantity / Recipe?.IngredientFlow.Quantity;
+            if (inputRatio > 1)
+            {
+                inputRatio = 1;
+            }
+            var outputQuantity =  Math.Round(inputRatio * Recipe?.ProductFlow.Quantity ?? 0, 2);
 
             OutPutResourceFlow =
-                new ResourceFlow(InputResourceFlow?.Resource ?? Resource.Nothing,
+                new ResourceFlow(Recipe?.ProductFlow.Resource?? Resource.Nothing,
                     outputConnectionState[0] is not null ? outputQuantity : 0);
         }
     }
@@ -51,4 +60,5 @@ public partial class BuilderViewModel : DynamicFlowBuilding, OutputBuilding
     }
 
     public override Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();
+
 }
