@@ -4,11 +4,59 @@ Five Year Plan is an editor to plan you Satisfactory production lines. You can p
 
 ## Project state
 
-This project is very early in this development and not usable yet.
+This project is very early in this development. It should be usable for tier 0 and 1 planning.
 
 Demo of current capabilities : 
 
 ![](images/five-years-plan.gif)
+
+## Roadmap
+
+- [x] Resource flow framework
+- [x] Tier 0 and 1 buildings
+  - [x] Splitter
+  - [x] Merger
+  - [x] Miner
+  - [x] Smelter
+  - [x] Constructor
+  - [ ] Storage container
+- [ ] Overclocking
+- [ ] Power consumption calculation
+- [ ] Nicer UI
+  - [ ] Overall design
+  - [ ] Buildings and resources icons
+- [ ] App packaged as :
+  - [ ] `.deb`
+  - [ ] `.rpm`
+  - [ ] Flatpak published to Flathub
+  - [ ] Windows installer
+- [ ] Tier 2 buildings :
+  - [ ] Assembler
+- [ ] Tier 3 buildings :
+  - [ ] Coal-Powered generator
+  - [ ] Water extractor
+  - [ ] Foundry
+- [ ] Tier 5 buildings :
+  - [ ] Oil extractor
+  - [ ] Refinery
+  - [ ] Packager
+  - [ ] Fuel Generator
+- [ ] Tier 6 buildings :
+  - [ ] Manufacturer
+- [ ] Tier 7 buildings :
+  - [ ] Blender
+- [ ] Tier 8 buildings :
+  - [ ] Nuclear Power Plant
+  - [ ] Resource Well
+  - [ ] Particles accelerator
+- [ ] Tier 9 buildings :
+  - [ ] Converter
+  - [ ] Quantum Encoder
+
+Other Ideas : 
+
+- Conveyor belt capacity requirements ?
+- 
 
 ## Build & Run from sources
 
