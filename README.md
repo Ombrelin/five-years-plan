@@ -8,11 +8,11 @@ This project is very early in this development and not usable yet.
 
 Demo of current capabilities : 
 
-![](images/Peek%202023-09-27%2020-19.gif)
+![](images/five-years-plan.gif)
 
 ## Build & Run from sources
 
-- Install .NET 7 SDK
+- Install .NET 8 SDK
 - Clone the project
 - `cd five-years-plan/src/FiveYearsPlan.UI`
 - `dotnet run`
