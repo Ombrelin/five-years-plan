@@ -1,3 +1,4 @@
+using FiveYearPlans.ViewModels.Buildings.Exceptions;
 using FiveYearPlans.ViewModels.Buildings.ViewModels;
 using FiveYearPlans.ViewModels.Recipes;
 using FiveYearPlans.ViewModels.Resources;
@@ -8,22 +9,17 @@ namespace FiveYearPlans.ViewModels.Tests;
 public class OneToOneMapperBuildingTests
 {
     [Fact]
-    public void ConnectConstructor_NoRecipe_OutputsAtZero()
+    public void ConnectConstructor_WrongRecipeOrInput_Throws()
     {
         // Given
         var target = new ConstructorViewModel();
+        target.Recipe = target.PossibleRecipes.Single(recipe => recipe.ProductFlow.Resource == Resource.IronPlate);
         var helper = new BuildingTestHelper(target);
         var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
 
         // When
-        helper.ConnectorArbitraryProducerToTarget(fakeBuildingContext, resource: Resource.IronIngot, quantity: 30);
-
-        // Then
-        Assert.Equal(new ResourceFlow(Resource.IronIngot, 30), target.InputResourceFlows[0]);
-
-        Assert.Single(target.OutPutResourceFlows);
-        Assert.Null(target.OutPutResourceFlows[0]);
-        Assert.Null(target.OutPutResourceFlow);
+        var exception = Assert.Throws<InvalidConnectionException>(() => helper.ConnectorArbitraryProducerToTarget(fakeBuildingContext, resource: Resource.IronOre, quantity: 30));
+        Assert.Equal("Input resource : IronOre doesn't match with recipe resource : IronIngot", exception.Message);
     }
     
     [Fact]
@@ -82,25 +78,6 @@ public class OneToOneMapperBuildingTests
 
         Assert.Equal(new ResourceFlow(recipeProduct, expectedOutputQuantity), target.OutPutResourceFlows[0]);
         Assert.Equal(new ResourceFlow(recipeProduct, expectedOutputQuantity), target.OutPutResourceFlow);
-    }
-    
-    [Fact]
-    public void ConnectSmelter_NoRecipe_OutputsAtZero()
-    {
-        // Given
-        var target = new SmelterViewModel();
-        var helper = new BuildingTestHelper(target);
-        var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
-
-        // When
-        helper.ConnectMinerToTarget(fakeBuildingContext);
-        
-
-        // Then
-        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
-
-        Assert.Null(target.OutPutResourceFlows[0]);
-        Assert.Null(target.OutPutResourceFlow);
     }
     
     [Fact]

@@ -44,7 +44,7 @@ public class MergerViewModelTests
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
         Assert.Null(target.InputResourceFlows[1]);
         Assert.Null(target.InputResourceFlows[2]);
-        
+
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlows[0]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), endBuilding.RecomputedResourceFlow);
     }
@@ -58,7 +58,7 @@ public class MergerViewModelTests
 
         ConnectMinerToTarget(fakeBuildingContext, 0);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
-        
+
 
         // When
         ConnectMinerToTarget(fakeBuildingContext, 1);
@@ -112,7 +112,7 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 0);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         ConnectMinerToTarget(fakeBuildingContext, 1);
-        
+
         // When
         ConnectMinerToTarget(fakeBuildingContext, 2);
 
@@ -129,7 +129,7 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 1);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         ConnectMinerToTarget(fakeBuildingContext, 0);
-        
+
         // When
         ConnectMinerToTarget(fakeBuildingContext, 2);
 
@@ -146,7 +146,7 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 2);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         ConnectMinerToTarget(fakeBuildingContext, 1);
-        
+
         // When
         ConnectMinerToTarget(fakeBuildingContext, 0);
 
@@ -163,7 +163,7 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 2);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         ConnectMinerToTarget(fakeBuildingContext, 0);
-        
+
         // When
         ConnectMinerToTarget(fakeBuildingContext, 1);
 
@@ -180,7 +180,7 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 0);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         ConnectMinerToTarget(fakeBuildingContext, 2);
-        
+
         // When
         ConnectMinerToTarget(fakeBuildingContext, 1);
 
@@ -198,7 +198,7 @@ public class MergerViewModelTests
         ConnectMinerToTarget(fakeBuildingContext, 1);
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
         ConnectMinerToTarget(fakeBuildingContext, 2);
-        
+
         // When
         ConnectMinerToTarget(fakeBuildingContext, 0);
 
@@ -281,7 +281,8 @@ public class MergerViewModelTests
             }
         };
 
-    private MinerViewModel ConnectMinerToTarget(FakeBuildingContextProvider fakeBuildingContextProvider, uint inputNumber)
+    private MinerViewModel ConnectMinerToTarget(FakeBuildingContextProvider fakeBuildingContextProvider,
+        uint inputNumber)
     {
         MinerViewModel miner = BuildIronOreMiner();
         fakeBuildingContextProvider.OutputBuildings[miner.Id] = new Dictionary<uint, Building?>
@@ -302,24 +303,22 @@ public class MergerViewModelTests
             Tier = MinerViewModel.MinerTier.Mk1
         };
 
-
-
     private EndBuilding ConnectEndBuildingToTarget(FakeBuildingContextProvider fakeBuildingContext)
     {
         const uint outputIndex = 0;
         var endBuilding = new EndBuilding();
         fakeBuildingContext.OutputBuildings[endBuilding.Id] = new Dictionary<uint, Building?>();
         fakeBuildingContext.OutputBuildings[target.Id][outputIndex] = endBuilding;
-        
+
         fakeBuildingContext.InputBuildings[endBuilding.Id] = new Dictionary<uint, Building?>();
         fakeBuildingContext.InputBuildings[endBuilding.Id][0] = target;
-        
+
         new BuildingConnector(fakeBuildingContext).ConnectBuildings(outputIndex, 0, endBuilding, target);
 
         return endBuilding;
     }
 
-    private void DisconnectMinerFromTarget(FakeBuildingContextProvider fakeBuildingContext, 
+    private void DisconnectMinerFromTarget(FakeBuildingContextProvider fakeBuildingContext,
         OutputBuilding disconnected, uint inputNumber)
     {
         const uint outputIndex = 0;
