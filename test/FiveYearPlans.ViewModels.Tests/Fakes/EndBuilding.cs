@@ -23,7 +23,7 @@ public class EndBuilding : DynamicFlowBuilding, InputBuilding
 
     protected override void EmptyOutput()
     {
-        //throw new NotImplementedException();
+        RecomputedResourceFlow = null;
     }
 
     public override Dictionary<uint, ResourceFlow> InputResourceFlows { get; } = new();

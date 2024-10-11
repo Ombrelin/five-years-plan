@@ -35,6 +35,10 @@
         <StackPanel>
             <Label>SMELTER</Label>
             <StackPanel Orientation="Horizontal">
+                <Label Content="{CompiledBinding Recipe}"></Label>
+                <Label>smelter.</Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
                 <Label>Input :</Label>
                 <StackPanel Orientation="Horizontal">
                     <Label Classes="node"

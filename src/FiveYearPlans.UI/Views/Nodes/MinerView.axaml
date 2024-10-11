@@ -56,6 +56,11 @@
 
         <StackPanel>
             <Label>MINER</Label>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{CompiledBinding Resource}"></Label>
+                <Label Content="{CompiledBinding Tier}"></Label>
+                <Label>miner.</Label>
+            </StackPanel>
             <Label>Output :</Label>
             <StackPanel Orientation="Horizontal">
                 <Label Classes="node"

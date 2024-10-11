@@ -6,6 +6,7 @@ using System.Linq;
 using FiveYearPlans.ViewModels;
 using FiveYearPlans.ViewModels.Buildings;
 using FiveYearPlans.ViewModels.Buildings.Abstractions;
+using FiveYearPlans.ViewModels.Buildings.Exceptions;
 using Microsoft.Extensions.Logging;
 using NodeEditor.Model;
 using NodeEditor.Mvvm;
@@ -70,7 +71,15 @@ internal class DrawingAdapter : IBuildingContextProvider
                             return;
                         }
 
-                        Connect(newConnector);
+                        try
+                        {
+                            Connect(newConnector);
+                        }
+                        catch (InvalidConnectionException exception)
+                        {
+                            connectors.Remove((ConnectorViewModel) a.NewItems[0]);
+                        }
+                        
                     };
                 }
             }

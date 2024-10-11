@@ -45,29 +45,36 @@ public partial class SplitterViewModel : DynamicFlowBuilding
     {
         InputResourceFlow = InputResourceFlows.Single().Value;
 
-        if (!connectedOutputs.Any())
+        var outputNumbers = connectedOutputs.Length == 0 ? 3 : connectedOutputs.Length;
+        var outputQuantity = (InputResourceFlow?.Quantity ?? 0) / outputNumbers;
+
+        if (connectedOutputs.Length == 0)
         {
-            OutPutResourceFlow1 = new ResourceFlow(Resource.Nothing, 0);
-            OutPutResourceFlow2 = new ResourceFlow(Resource.Nothing, 0);
-            OutPutResourceFlow3 = new ResourceFlow(Resource.Nothing, 0);
+            OutPutResourceFlow1 = BuildOutputResourceFlow(outputQuantity, connectedOutputs);
+            OutPutResourceFlow2 = BuildOutputResourceFlow(outputQuantity, connectedOutputs);
+            OutPutResourceFlow3 = BuildOutputResourceFlow(outputQuantity, connectedOutputs);
         }
         else
         {
-            var outputQuantity = (InputResourceFlow?.Quantity ?? 0) / connectedOutputs.Length;
+            var connectionStates = new Dictionary<uint, Building?>(outputConnectionState.Where(kvp => kvp.Value != null));
 
-            OutPutResourceFlow1 = BuildOutputResourceFlow(outputConnectionState[0], outputQuantity);
-            OutPutResourceFlow2 = BuildOutputResourceFlow(outputConnectionState[1], outputQuantity);
-            OutPutResourceFlow3 = BuildOutputResourceFlow(outputConnectionState[2], outputQuantity);
+            OutPutResourceFlow1 = connectionStates.ContainsKey(0) ? BuildOutputResourceFlow(outputQuantity, connectedOutputs) : null;
+            OutPutResourceFlow2 = connectionStates.ContainsKey(1) ? BuildOutputResourceFlow(outputQuantity, connectedOutputs) : null;
+            OutPutResourceFlow3 = connectionStates.ContainsKey(2) ? BuildOutputResourceFlow(outputQuantity, connectedOutputs) : null;
         }
     }
 
-    private ResourceFlow BuildOutputResourceFlow(Building? building, decimal outputQuantity)
+    private ResourceFlow? BuildOutputResourceFlow(decimal outputQuantity, KeyValuePair<uint, Building>[]  connectedOutputs)
     {
-        if (outputQuantity == 0 || building is null || InputResourceFlow is null)
+        if (InputResourceFlow is null)
         {
-            return new ResourceFlow(Resource.Nothing, 0);
+            return null;
         }
-
+        if (outputQuantity == 0 && connectedOutputs.Length != 0)
+        {
+            return null;
+        }
+        
         return InputResourceFlow with { Quantity = outputQuantity };
     }
 

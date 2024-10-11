@@ -27,9 +27,9 @@ public abstract partial class OneToOneMappingBuilding : DynamicFlowBuilding
     {
         InputResourceFlow = InputResourceFlows.Single().Value;
 
-        if (connectedOutputs.Length == 0 || InputResourceFlow is null)
+        if (InputResourceFlow is null)
         {
-            OutPutResourceFlow =  new ResourceFlow(Resource.Nothing, 0);
+            OutPutResourceFlow = null;
         }
         else
         {
@@ -40,9 +40,7 @@ public abstract partial class OneToOneMappingBuilding : DynamicFlowBuilding
             }
             var outputQuantity =  Math.Round(inputRatio * Recipe?.ProductFlow.Quantity ?? 0, 2);
 
-            OutPutResourceFlow =
-                new ResourceFlow(Recipe?.ProductFlow.Resource?? Resource.Nothing,
-                    outputConnectionState[0] is not null ? outputQuantity : 0);
+            OutPutResourceFlow = Recipe is null ? null : Recipe.ProductFlow with { Quantity = outputQuantity };
         }
     }
 
