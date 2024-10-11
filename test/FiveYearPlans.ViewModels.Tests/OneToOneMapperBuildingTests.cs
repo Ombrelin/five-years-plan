@@ -22,8 +22,8 @@ public class OneToOneMapperBuildingTests
         Assert.Equal(new ResourceFlow(Resource.IronIngot, 30), target.InputResourceFlows[0]);
 
         Assert.Single(target.OutPutResourceFlows);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow);
+        Assert.Null(target.OutPutResourceFlows[0]);
+        Assert.Null(target.OutPutResourceFlow);
     }
     
     [Fact]
@@ -94,12 +94,13 @@ public class OneToOneMapperBuildingTests
 
         // When
         helper.ConnectMinerToTarget(fakeBuildingContext);
+        
 
         // Then
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
 
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow);
+        Assert.Null(target.OutPutResourceFlows[0]);
+        Assert.Null(target.OutPutResourceFlow);
     }
     
     [Fact]

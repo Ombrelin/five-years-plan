@@ -65,8 +65,8 @@ public class BuildingConnector
     public void DisconnectBuilding(uint outputIndex, uint inputIndex, InputBuilding inputBuilding,
         OutputBuilding outputBuilding)
     {
-        inputBuilding.InputResourceFlows[inputIndex] = new ResourceFlow(Resource.Nothing, 0);
-
+        inputBuilding.InputResourceFlows.Remove(inputIndex);
+        
         if (outputBuilding is DynamicFlowBuilding otherDynamicFlowsOutputBuilding)
         {
             otherDynamicFlowsOutputBuilding.RecomputeOutput(buildingContextProvider);

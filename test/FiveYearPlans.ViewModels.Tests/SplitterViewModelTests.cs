@@ -56,17 +56,16 @@ public class SplitterViewModelTests
 
         // When
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext);
-        ;
 
         // Then
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
 
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlows[0]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow3);
+        Assert.Null(target.OutPutResourceFlows[1]);
+        Assert.Null(target.OutPutResourceFlow2);
+        Assert.Null(target.OutPutResourceFlows[2]);
+        Assert.Null(target.OutPutResourceFlow3);
 
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), endBuilding.RecomputedResourceFlow);
     }
@@ -87,8 +86,8 @@ public class SplitterViewModelTests
         // Then
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[0]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow2);
+        Assert.Null(target.OutPutResourceFlows[1]);
+        Assert.Null(target.OutPutResourceFlow2);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[2]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow3);
 
@@ -110,8 +109,8 @@ public class SplitterViewModelTests
         EndBuilding endBuilding = ConnectEndBuildingToTarget(fakeBuildingContext, 2);
 
         // Then
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow1);
+        Assert.Null(target.OutPutResourceFlows[0]);
+        Assert.Null(target.OutPutResourceFlow1);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[1]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow2);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[2]);
@@ -138,8 +137,8 @@ public class SplitterViewModelTests
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow1);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[1]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow3);
+        Assert.Null(target.OutPutResourceFlows[2]);
+        Assert.Null(target.OutPutResourceFlow3);
 
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), previousEndBuilding.RecomputedResourceFlow);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), endBuilding.RecomputedResourceFlow);
@@ -312,14 +311,14 @@ public class SplitterViewModelTests
         DisconnectEndBuildingFromTarget(fakeBuildingContext, 0, previousEndBuilding);
 
         // Then
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow1);
+        Assert.Null(target.OutPutResourceFlows[0]);
+        Assert.Null(target.OutPutResourceFlow1);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[1]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow2);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlows[2]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), target.OutPutResourceFlow3);
 
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), previousEndBuilding.RecomputedResourceFlow);
+        Assert.Null(previousEndBuilding.RecomputedResourceFlow);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), endBuilding.RecomputedResourceFlow);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 15), thirdEndBuilding.RecomputedResourceFlow);
     }
@@ -337,15 +336,15 @@ public class SplitterViewModelTests
         DisconnectEndBuildingFromTarget(fakeBuildingContext, 2, thirdEndBuilding);
 
         // Then
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow1);
+        Assert.Null(target.OutPutResourceFlows[0]);
+        Assert.Null(target.OutPutResourceFlow1);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlows[1]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow3);
+        Assert.Null(target.OutPutResourceFlows[2]);
+        Assert.Null(target.OutPutResourceFlow3);
 
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), endBuilding.RecomputedResourceFlow);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), thirdEndBuilding.RecomputedResourceFlow);
+        Assert.Null(thirdEndBuilding.RecomputedResourceFlow);
     }
 
     [Fact]
@@ -367,7 +366,7 @@ public class SplitterViewModelTests
         Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[2]);
         Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow3);
 
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), endBuilding.RecomputedResourceFlow);
+        Assert.Null(endBuilding.RecomputedResourceFlow);
     }
 
 

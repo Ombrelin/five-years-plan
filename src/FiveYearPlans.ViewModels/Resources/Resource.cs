@@ -3,7 +3,6 @@ namespace FiveYearPlans.ViewModels.Resources;
 public enum Resource
 {
     // Ores
-    Nothing,
     IronOre,
     CopperOre,
     Limestone,

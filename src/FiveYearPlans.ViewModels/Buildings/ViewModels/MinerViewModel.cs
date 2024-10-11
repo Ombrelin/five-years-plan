@@ -12,7 +12,7 @@ namespace FiveYearPlans.ViewModels.Buildings.ViewModels;
 public partial class MinerViewModel : Building, OutputBuilding
 {
     [ObservableProperty] private ResourceFlow outPutResourceFlow;
-    [ObservableProperty] private Resource resource;
+    [ObservableProperty] private Resource? resource;
     [ObservableProperty] private ResourceDepositPurity resourceDepositPurity = ResourceDepositPurity.Impure;
     [ObservableProperty] private MinerTier tier = MinerTier.Mk1;
 
@@ -39,7 +39,11 @@ public partial class MinerViewModel : Building, OutputBuilding
 
     private void OnPropertyChangedEventHandler(object? _, PropertyChangedEventArgs args)
     {
-        this.OutPutResourceFlow = new ResourceFlow(Resource, ResourceOutput);
+        if (Resource is null)
+        {
+            return;
+        }
+        this.OutPutResourceFlow = new ResourceFlow(Resource.Value, ResourceOutput);
         if (buildingsProvider is not null)
         {
             RecomputeChildren(buildingsProvider, buildingsProvider.GetOutputConnectionState(Id).ToArray());

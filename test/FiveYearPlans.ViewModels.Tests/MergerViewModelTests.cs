@@ -255,8 +255,8 @@ public class MergerViewModelTests
         DisconnectMinerFromTarget(fakeBuildingContext, miner, 1);
 
         // Then
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), endBuilding.RecomputedResourceFlow);
+        Assert.Null(target.OutPutResourceFlows[0]);
+        Assert.Null(endBuilding.RecomputedResourceFlow);
     }
 
 
@@ -294,7 +294,7 @@ public class MergerViewModelTests
         return miner;
     }
 
-    public MinerViewModel BuildIronOreMiner() =>
+    public static MinerViewModel BuildIronOreMiner() =>
         new()
         {
             Resource = Resource.IronOre,
