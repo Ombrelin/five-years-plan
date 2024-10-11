@@ -45,25 +45,17 @@ public partial class SplitterViewModel : DynamicFlowBuilding
     {
         InputResourceFlow = InputResourceFlows.Single().Value;
 
-        if (!connectedOutputs.Any())
-        {
-            OutPutResourceFlow1 = new ResourceFlow(Resource.Nothing, 0);
-            OutPutResourceFlow2 = new ResourceFlow(Resource.Nothing, 0);
-            OutPutResourceFlow3 = new ResourceFlow(Resource.Nothing, 0);
-        }
-        else
-        {
-            var outputQuantity = (InputResourceFlow?.Quantity ?? 0) / connectedOutputs.Length;
+        var outputNumbers = connectedOutputs.Length == 0 ? 3 : connectedOutputs.Length;
+        var outputQuantity = (InputResourceFlow?.Quantity ?? 0) / outputNumbers;
 
-            OutPutResourceFlow1 = BuildOutputResourceFlow(outputConnectionState[0], outputQuantity);
-            OutPutResourceFlow2 = BuildOutputResourceFlow(outputConnectionState[1], outputQuantity);
-            OutPutResourceFlow3 = BuildOutputResourceFlow(outputConnectionState[2], outputQuantity);
-        }
+        OutPutResourceFlow1 = BuildOutputResourceFlow(outputConnectionState[0], outputQuantity, connectedOutputs);
+        OutPutResourceFlow2 = BuildOutputResourceFlow(outputConnectionState[1], outputQuantity, connectedOutputs);
+        OutPutResourceFlow3 = BuildOutputResourceFlow(outputConnectionState[2], outputQuantity, connectedOutputs);
     }
 
-    private ResourceFlow BuildOutputResourceFlow(Building? building, decimal outputQuantity)
+    private ResourceFlow BuildOutputResourceFlow(Building? building, decimal outputQuantity, KeyValuePair<uint, Building>[]  connectedOutputs)
     {
-        if (outputQuantity == 0 || building is null || InputResourceFlow is null)
+        if ((outputQuantity == 0 || building is null || InputResourceFlow is null) && connectedOutputs.Length != 0)
         {
             return new ResourceFlow(Resource.Nothing, 0);
         }

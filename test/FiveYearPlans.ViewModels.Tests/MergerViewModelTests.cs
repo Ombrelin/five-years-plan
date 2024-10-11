@@ -14,7 +14,7 @@ public class MergerViewModelTests
     private readonly MergerViewModel target = new();
 
     [Fact]
-    public void Connect_NoOutputFlowConnected_OutputAndOtherInputsAtZero()
+    public void Connect_NoOutputFlowConnected_OtherInputsAtZeroAndOutputHasFullInput()
     {
         // Given
         FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
@@ -27,7 +27,7 @@ public class MergerViewModelTests
         Assert.Null(target.InputResourceFlows[1]);
         Assert.Null(target.InputResourceFlows[2]);
 
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.OutPutResourceFlows[0]);
     }
 
     [Fact]
@@ -244,7 +244,7 @@ public class MergerViewModelTests
     }
 
     [Fact]
-    public void Disconnect_OneOutputFlowConnectedRestoreToZeroOutput_SplitInputOnEach()
+    public void Disconnect_OneInputFlowConnectedRestoreToZeroOutput_FullOnOutput()
     {
         // Given
         FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();

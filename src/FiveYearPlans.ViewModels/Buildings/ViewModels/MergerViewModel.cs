@@ -42,14 +42,7 @@ public partial class MergerViewModel : DynamicFlowBuilding
             .Where(resourceFlow => resourceFlow is not null)
             .Sum(resourceFlow => resourceFlow.Quantity);
 
-        if (!connectedOutputs.Any() || outputCount == 0)
-        {
-            OutPutResourceFlow = new ResourceFlow(Resource.Nothing, 0);
-        }
-        else
-        {
-            OutPutResourceFlow = new ResourceFlow(resource, outputCount);
-        }
+        OutPutResourceFlow = new ResourceFlow(resource, outputCount);
     }
 
     private Resource ExtractInputResource()

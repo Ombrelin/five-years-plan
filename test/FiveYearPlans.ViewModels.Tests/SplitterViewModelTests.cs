@@ -28,7 +28,7 @@ public class SplitterViewModelTests
     }
 
     [Fact]
-    public void Connect_NoOutputFlowConnected_AllOutputsAtZero()
+    public void Connect_NoOutputFlowConnected_SplitInputBetweenOutputs()
     {
         // Given
         FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
@@ -39,12 +39,12 @@ public class SplitterViewModelTests
         // Then
         Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
 
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow3);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow3);
     }
 
     [Fact]
@@ -349,7 +349,7 @@ public class SplitterViewModelTests
     }
 
     [Fact]
-    public void Disconnect_OneOutputFlowConnectedRestoreToZeroOutput_EmptyOutput()
+    public void Disconnect_OneOutputFlowConnectedRestoreToZeroOutput_SplitBetweenOutputs()
     {
         // Given
         FakeBuildingContextProvider fakeBuildingContext = FakeBuildingContextProviderWithTarget();
@@ -360,12 +360,12 @@ public class SplitterViewModelTests
         DisconnectEndBuildingFromTarget(fakeBuildingContext, 1, endBuilding);
 
         // Then
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow1);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[1]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow2);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[2]);
-        Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow3);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow1);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[1]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow2);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlows[2]);
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 10), target.OutPutResourceFlow3);
 
         Assert.Equal(new ResourceFlow(Resource.Nothing, 0), endBuilding.RecomputedResourceFlow);
     }

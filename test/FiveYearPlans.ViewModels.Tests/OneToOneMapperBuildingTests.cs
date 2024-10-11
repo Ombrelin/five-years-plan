@@ -8,7 +8,7 @@ namespace FiveYearPlans.ViewModels.Tests;
 public class OneToOneMapperBuildingTests
 {
     [Fact]
-    public void ConnectConstructor_NoOutputFlowConnected_AllOutputsAtZero()
+    public void ConnectConstructor_NoRecipe_OutputsAtZero()
     {
         // Given
         var target = new ConstructorViewModel();
@@ -16,13 +16,34 @@ public class OneToOneMapperBuildingTests
         var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
 
         // When
-        helper.ConnectMinerToTarget(fakeBuildingContext);
+        helper.ConnectorArbitraryProducerToTarget(fakeBuildingContext, resource: Resource.IronIngot, quantity: 30);
 
         // Then
-        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronIngot, 30), target.InputResourceFlows[0]);
 
+        Assert.Single(target.OutPutResourceFlows);
         Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
         Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow);
+    }
+    
+    [Fact]
+    public void ConnectConstructor_NoOutputFlowConnected_OutputsResultOfRecipe()
+    {
+        // Given
+        var target = new ConstructorViewModel();
+        target.Recipe = target.PossibleRecipes.Single(recipe => recipe.ProductFlow.Resource == Resource.IronPlate);
+        var helper = new BuildingTestHelper(target);
+        var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
+
+        // When
+        helper.ConnectorArbitraryProducerToTarget(fakeBuildingContext, resource: Resource.IronIngot, quantity: 30);
+
+        // Then
+        Assert.Equal(new ResourceFlow(Resource.IronIngot, 30), target.InputResourceFlows[0]);
+
+        Assert.Single(target.OutPutResourceFlows);
+        Assert.Equal(new ResourceFlow(Resource.IronPlate, 20), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronPlate, 20), target.OutPutResourceFlow);
     }
 
     [Theory]
@@ -64,10 +85,10 @@ public class OneToOneMapperBuildingTests
     }
     
     [Fact]
-    public void ConnectSmelter_NoOutputFlowConnected_AllOutputsAtZero()
+    public void ConnectSmelter_NoRecipe_OutputsAtZero()
     {
         // Given
-        var target = new ConstructorViewModel();
+        var target = new SmelterViewModel();
         var helper = new BuildingTestHelper(target);
         var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
 
@@ -79,6 +100,25 @@ public class OneToOneMapperBuildingTests
 
         Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlows[0]);
         Assert.Equal(new ResourceFlow(Resource.Nothing, 0), target.OutPutResourceFlow);
+    }
+    
+    [Fact]
+    public void ConnectSmelter_NoOutputFlowConnected_OutputsResultOfRecipe()
+    {
+        // Given
+        var target = new SmelterViewModel();
+        target.Recipe = target.PossibleRecipes.Single(recipe => recipe.ProductFlow.Resource == Resource.IronIngot);
+        var helper = new BuildingTestHelper(target);
+        var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
+
+        // When
+        helper.ConnectMinerToTarget(fakeBuildingContext);
+
+        // Then
+        Assert.Equal(new ResourceFlow(Resource.IronOre, 30), target.InputResourceFlows[0]);
+
+        Assert.Equal(new ResourceFlow(Resource.IronIngot, 30), target.OutPutResourceFlows[0]);
+        Assert.Equal(new ResourceFlow(Resource.IronIngot, 30), target.OutPutResourceFlow);
     }
 
     [Theory]
@@ -97,7 +137,7 @@ public class OneToOneMapperBuildingTests
     )
     {
         // Given
-        var target = new ConstructorViewModel();
+        var target = new SmelterViewModel();
         var helper = new BuildingTestHelper(target);
         var fakeBuildingContext = helper.FakeBuildingContextProviderWithTarget();
         target.Recipe = new Recipe(new ResourceFlow(recipeIngredient, recipeIngredientQuantity),
