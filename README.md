@@ -67,11 +67,6 @@ Other Ideas :
 - `cd five-years-plan/src/FiveYearsPlan.UI`
 - `dotnet run`
 
-## Thanks
-
-- App logo : 
-  - <a target="_blank" href="https://icons8.com/icon/64036/blueprint">Blueprint</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
-
 ## Technologies
 
 - [.NET 7, C# 11](https://dotnet.microsoft.com/en-us/)
