@@ -1,5 +1,7 @@
 # Five Years Plan
 
+<img src="logo/logo.svg" style="width: 200px"/>
+
 Five Year Plan is an editor to plan you Satisfactory production lines. You can place buildings, set resources inputs flows, and the flows will be calculated automatically along your production lines, so that you can focus on optimizing it.
 
 ## Project state
@@ -64,6 +66,11 @@ Other Ideas :
 - Clone the project
 - `cd five-years-plan/src/FiveYearsPlan.UI`
 - `dotnet run`
+
+## Thanks
+
+- App logo : 
+  - <a target="_blank" href="https://icons8.com/icon/64036/blueprint">Blueprint</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 ## Technologies
 
