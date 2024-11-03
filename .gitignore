@@ -2,3 +2,5 @@
 obj
 bin
 *.user
+**/install_dir/**
+five-year-plan-setup.exe
