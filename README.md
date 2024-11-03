@@ -31,7 +31,7 @@ Demo of current capabilities :
   - [ ] `.deb`
   - [ ] `.rpm`
   - [ ] Flatpak published to Flathub
-  - [ ] Windows installer
+  - [x] Windows installer
 - [ ] Tier 2 buildings :
   - [ ] Assembler
 - [ ] Tier 3 buildings :
